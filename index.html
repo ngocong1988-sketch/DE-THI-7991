@@ -56,6 +56,17 @@
         table.math-frac tr:first-child td {
             border-bottom: 1px solid #000 !important;
         }
+        /* Dấu căn có gạch ngang trên đầu chuẩn Word */
+        .math-sqrt {
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .math-sqrt-body {
+            border-top: 1.2px solid #000;
+            padding: 0 2px;
+            display: inline-block;
+            line-height: 1.1;
+        }
         .tab-btn.active {
             border-bottom: 3px solid #2563eb;
             color: #1d4ed8;
@@ -284,9 +295,9 @@
             <div id="mathToolbar" class="hidden bg-slate-100 border-x border-b border-gray-300 px-3 py-2 flex flex-wrap items-center gap-1.5 shadow-inner">
                 <span class="text-[11px] font-bold text-slate-600 mr-1"><i class="fa-solid fa-square-root-variable text-blue-700"></i> Chèn nhanh:</span>
                 <button type="button" onmousedown="event.preventDefault(); insertFraction()" class="math-btn bg-blue-50 border-blue-300 text-blue-800" title="Chèn phân số tử/mẫu">Phân số a/b</button>
+                <button type="button" onmousedown="event.preventDefault(); insertSqrt()" class="math-btn bg-blue-50 border-blue-300 text-blue-800" title="Chèn căn bậc hai có gạch ngang trên đầu">√x</button>
                 <button type="button" onmousedown="event.preventDefault(); insertSuperscript()" class="math-btn" title="Chèn số mũ (xⁿ)">x<sup>n</sup></button>
                 <button type="button" onmousedown="event.preventDefault(); insertSubscript()" class="math-btn" title="Chèn chỉ số dưới (xₙ)">x<sub>n</sub></button>
-                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('√(')" class="math-btn" title="Căn bậc hai">√</button>
                 <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('±')" class="math-btn">±</button>
                 <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('≤')" class="math-btn">≤</button>
                 <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('≥')" class="math-btn">≥</button>
@@ -329,7 +340,7 @@
                 <!-- Khu vực xem trước & Chỉnh sửa trực tiếp -->
                 <div id="previewContainer" class="hidden">
                     <div class="bg-blue-50 border border-blue-200 text-blue-800 text-xs px-3 py-1.5 rounded-lg mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <span><i class="fa-solid fa-circle-info mr-1"></i> Đặt con trỏ vào bài làm và dùng thanh công cụ phía trên để chèn phân số, ký hiệu toán hoặc dán ảnh (<b>Ctrl+V</b>). Xuất Word không lỗi font.</span>
+                        <span><i class="fa-solid fa-circle-info mr-1"></i> Đặt con trỏ vào bài làm và dùng thanh công cụ phía trên để chèn phân số, dấu căn (<b>√x</b>) hoặc dán ảnh (<b>Ctrl+V</b>). Xuất Word không lỗi font.</span>
                     </div>
                     <div id="content-matrix" class="doc-preview" contenteditable="true"></div>
                     <div id="content-spec" class="doc-preview hidden" contenteditable="true"></div>
@@ -376,9 +387,7 @@
                             </div>
                         </div>
 
-                        <div id="bankListContainer" class="space-y-2.5">
-                            <!-- Danh sách đề đã lưu render ở đây -->
-                        </div>
+                        <div id="bankListContainer" class="space-y-2.5"></div>
                     </div>
                 </div>
 
@@ -511,7 +520,6 @@
             renderExamBankList();
         };
 
-        // Theo dõi vùng soạn thảo đang chọn & hỗ trợ dán ảnh trực tiếp Ctrl+V
         function setupEditorPasteAndFocus() {
             const editors = ['content-matrix', 'content-spec', 'content-exam', 'content-backup', 'shuffledOutput'];
             editors.forEach(id => {
@@ -532,7 +540,6 @@
             });
         }
 
-        // Các hàm chèn công thức Toán học & Ảnh 1-chạm
         function insertHTMLAtCursor(html) {
             const sel = window.getSelection();
             if (sel && sel.rangeCount > 0) {
@@ -543,7 +550,6 @@
                     return;
                 }
             }
-            // Nếu chưa đặt con trỏ, tự động chèn vào cuối tab đang mở
             const activeTab = document.querySelector('.doc-preview:not(.hidden)');
             if (activeTab) {
                 activeTab.focus();
@@ -556,6 +562,12 @@
         function insertFraction() {
             const fracHTML = `&nbsp;<table class="math-frac"><tr><td>tử số</td></tr><tr><td>mẫu số</td></tr></table>&nbsp;`;
             insertHTMLAtCursor(fracHTML);
+        }
+
+        function insertSqrt() {
+            const selText = window.getSelection().toString() || 'x';
+            const sqrtHTML = `&nbsp;<span class="math-sqrt">√<span class="math-sqrt-body">${selText}</span></span>&nbsp;`;
+            insertHTMLAtCursor(sqrtHTML);
         }
 
         function insertSuperscript() {
@@ -579,13 +591,12 @@
             event.target.value = '';
         }
 
-        // Nén và thu nhỏ kích thước ảnh để không bị tràn lề Word và nhẹ file lưu trữ
         function compressAndInsertImage(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
                 img.onload = function() {
-                    const maxWidth = 240; // Kích thước chuẩn gọn trong câu hỏi Word
+                    const maxWidth = 240;
                     let width = img.width;
                     let height = img.height;
                     if (width > maxWidth) {
@@ -605,17 +616,15 @@
             reader.readAsDataURL(file);
         }
 
-        // Chuẩn hóa công thức Toán học từ văn bản AI sang định dạng HTML chuẩn Word (không lỗi LaTeX)
         function formatMathAndLines(text) {
             if (!text) return '';
             let str = String(text)
-                // Loại bỏ dấu bọc LaTeX $ nếu AI lỡ sinh ra
                 .replace(/\$\$/g, '')
                 .replace(/\$/g, '')
-                // Chuyển đổi các lệnh LaTeX phổ biến sang ký tự Unicode chuẩn Word
                 .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '<table class="math-frac"><tr><td>$1</td></tr><tr><td>$2</td></tr></table>')
-                .replace(/\\sqrt\{([^{}]+)\}/g, '√($1)')
-                .replace(/\\sqrt/g, '√')
+                .replace(/\\sqrt\{([^{}]+)\}/g, '<span class="math-sqrt">√<span class="math-sqrt-body">$1</span></span>')
+                .replace(/√\(([^()]+)\)/g, '<span class="math-sqrt">√<span class="math-sqrt-body">($1)</span></span>')
+                .replace(/√([0-9a-zA-Z]+)/g, '<span class="math-sqrt">√<span class="math-sqrt-body">$1</span></span>')
                 .replace(/\\leq/g, '≤')
                 .replace(/\\geq/g, '≥')
                 .replace(/\\neq/g, '≠')
@@ -639,7 +648,6 @@
                 .replace(/\^([0-9a-zA-Z+-])/g, '<sup>$1</sup>')
                 .replace(/\_\{([^{}]+)\}/g, '<sub>$1</sub>')
                 .replace(/\_([0-9a-zA-Z])/g, '<sub>$1</sub>')
-                // Ngắt dòng rõ ràng các ý a), b), c), d) và gạch đầu dòng
                 .replace(/([.:;?!])\s*([a-d]\))/gi, '$1<br><b>$2</b>')
                 .replace(/^([a-d]\))/i, '<b>$1</b>')
                 .replace(/([.:;?!])\s*([-+•]\s+)/g, '$1<br>&nbsp;&nbsp;$2')
@@ -823,7 +831,7 @@ QUY TẮC ĐỊNH DẠNG TOÁN HỌC CHUẨN WORD (RẤT QUAN TRỌNG):
 - TUYỆT ĐỐI KHÔNG dùng mã LaTeX có dấu $ (không viết $x^2$, không viết $\\frac{1}{2}$).
 - Hãy viết công thức bằng ký tự Unicode chuẩn và thẻ HTML đơn giản để mở bằng Microsoft Word không bị lỗi font:
   + Số mũ dùng thẻ <sup> (ví dụ: x<sup>2</sup>, cm<sup>3</sup>), chỉ số dưới dùng <sub> (ví dụ: H<sub>2</sub>O, x<sub>1</sub>).
-  + Căn thức viết dạng: √(x + 1) hoặc √2.
+  + Căn thức viết dạng: √(3 - x) hoặc √2.
   + Ký hiệu dùng ký tự chuẩn: ≤, ≥, ≠, ≈, ±, ×, ÷, ∆, ∠, ⊥, ∥, ∈, ∪, ∩, π, °.
 
 QUY TẮC KHẢO THÍ BẮT BUỘC:
@@ -940,7 +948,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
 
                 renderAllTabs();
                 generateShuffledVersions();
-                saveCurrentExamToBank(false); // Tự động lưu vào kho đề
+                saveCurrentExamToBank(false);
 
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('previewContainer').classList.remove('hidden');
@@ -1182,7 +1190,6 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             `;
         }
 
-        // ================= KHO LƯU TRỮ NGÂN HÀNG ĐỀ & FILE .JSON =================
         function getExamBank() {
             try {
                 return JSON.parse(localStorage.getItem(BANK_STORAGE_KEY)) || [];
@@ -1322,7 +1329,6 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                     const parsed = JSON.parse(e.target.result);
                     const bank = getExamBank();
                     if (Array.isArray(parsed)) {
-                        // Nạp cả kho đề
                         parsed.forEach(item => {
                             if (item.data && item.title) {
                                 item.id = 'exam_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
@@ -1333,7 +1339,6 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                         renderExamBankList();
                         alert(`Đã nạp thành công ${parsed.length} bộ đề vào Kho!`);
                     } else if (parsed.data && parsed.title) {
-                        // Nạp 1 đề lẻ
                         parsed.id = 'exam_' + Date.now();
                         bank.unshift(parsed);
                         saveExamBank(bank);
@@ -1351,7 +1356,6 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             event.target.value = '';
         }
 
-        // ================= TRỘN MÃ ĐỀ & XUẤT WORD =================
         function shuffleArray(arr) {
             const copy = JSON.parse(JSON.stringify(arr));
             for (let i = copy.length - 1; i > 0; i--) {
@@ -1413,6 +1417,8 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                     table.math-frac { display: inline-table; width: auto; border-collapse: collapse; vertical-align: middle; margin: 0 3px; }
                     table.math-frac td { border: none; padding: 0 4px; text-align: center; line-height: 1.15; }
                     table.math-frac tr:first-child td { border-bottom: 1px solid #000; }
+                    .math-sqrt { white-space: nowrap; }
+                    .math-sqrt-body { border-top: 1pt solid #000; padding: 0 2px; }
                 </style>
                 </head><body>`;
             const footer = "</body></html>";

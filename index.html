@@ -792,13 +792,24 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 </div>
             `).join('');
 
-            let ansP3Rows = deThiObj.phan_3.map((q, idx) => `
-    <tr>
-        <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
-        <td style="white-space:pre-line;">${q.huong_dan_cham}</td>
-        <td style="text-align:center; font-weight:bold;">${q.diem} đ</td>
-    </tr>
-`).join('');
+            let ansP3Rows = deThiObj.phan_3.map((q, idx) => {
+                let formattedGuide = (q.huong_dan_cham || '')
+        // Tách xuống dòng trước các ý a), b), c), d) nếu đang dính liền sau dấu câu
+                .replace(/([.:;?!])\s*([a-d]\))/gi, '$1<br><b>$2</b>')
+        // In đậm ý a), b), c), d) ở đầu dòng
+                .replace(/^([a-d]\))/i, '<b>$1</b>')
+        // Tách xuống dòng trước các gạch đầu dòng (-) hoặc dấu cộng (+)
+                .replace(/([.:;?!])\s*([-+•]\s+)/g, '$1<br>&nbsp;&nbsp;$2')
+        // Chuyển ký tự xuống dòng \n có sẵn thành thẻ <br> chuẩn Word
+            .replace(/\n/g, '<br>');
+
+            return `
+            <tr>
+                <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
+                <td style="line-height:1.45; text-align:left;">${formattedGuide}</td>
+                <td style="text-align:center; font-weight:bold;">${q.diem} đ</td>
+            </tr>`;
+            }).join('');
 
             let ansP1Cells = deThiObj.phan_1.map((q, idx) => `<th>Câu ${idx + 1}</th>`).join('');
             let ansP1Vals = deThiObj.phan_1.map(q => `<td style="text-align:center; font-weight:bold;">${letters[q.dap_an_index]}</td>`).join('');

@@ -110,4 +110,778 @@
                                 <option value="Toán">Toán</option>
                                 <option value="Khoa học tự nhiên">Khoa học tự nhiên</option>
                                 <option value="Ngữ văn">Ngữ văn</option>
-                                <option value="Tiếng Anh">Ti
+                                <option value="Tiếng Anh">Tiếng Anh</option>
+                                <option value="Lịch sử và Địa lí">Lịch sử và Địa lí</option>
+                                <option value="GDCD">Giáo dục công dân</option>
+                                <option value="Công nghệ">Công nghệ</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700 mb-1">Khối lớp</label>
+                            <select id="grade" onchange="autoFillCurriculum()" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                                <option value="6">Lớp 6</option>
+                                <option value="7">Lớp 7</option>
+                                <option value="8">Lớp 8</option>
+                                <option value="9" selected>Lớp 9</option>
+                                <option value="10">Lớp 10</option>
+                                <option value="11">Lớp 11</option>
+                                <option value="12">Lớp 12</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block font-medium text-gray-700 mb-1">Kỳ kiểm tra</label>
+                            <select id="examType" onchange="autoFillCurriculum()" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none font-medium">
+                                <option value="KIỂM TRA GIỮA HỌC KỲ I">Giữa Học kỳ I</option>
+                                <option value="KIỂM TRA CUỐI HỌC KỲ I">Cuối Học kỳ I</option>
+                                <option value="KIỂM TRA GIỮA HỌC KỲ II">Giữa Học kỳ II</option>
+                                <option value="KIỂM TRA CUỐI HỌC KỲ II">Cuối Học kỳ II</option>
+                                <option value="KIỂM TRA THƯỜNG XUYÊN">Thường xuyên (15p)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700 mb-1">Thời gian (phút)</label>
+                            <input type="number" id="duration" value="45" class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Bộ sách & Nút nạp nhanh giới hạn chương trình -->
+                    <div class="bg-indigo-50 p-2.5 rounded-lg border border-indigo-200 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-900 block"><i class="fa-solid fa-book-open mr-1"></i> SGK Kết nối tri thức</span>
+                            <span class="text-[11px] text-indigo-700" id="curriculumStatus">Đã nạp chuẩn giới hạn chương trình</span>
+                        </div>
+                        <button type="button" onclick="autoFillCurriculum(true)" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-2.5 py-1.5 rounded font-medium transition">
+                            <i class="fa-solid fa-rotate mr-1"></i> Nạp lại
+                        </button>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="font-medium text-gray-700">
+                                Giới hạn kiến thức / Bài học <span class="text-red-500">*</span>
+                            </label>
+                            <span class="text-[11px] text-gray-500">(Có thể chỉnh sửa trực tiếp)</span>
+                        </div>
+                        <textarea id="topics" rows="6" 
+                            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none text-xs leading-relaxed"></textarea>
+                    </div>
+
+                    <!-- Cấu trúc điểm theo CV 7991 -->
+                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                        <label class="block font-bold text-blue-900 mb-2 text-xs uppercase">Cấu trúc điểm 3 phần (Tổng = 10đ)</label>
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div>
+                                <span class="text-xs text-gray-600 block">Phần I (Nhiều LC)</span>
+                                <input type="number" id="scoreP1" value="3.0" step="0.5" class="w-full border rounded px-2 py-1 text-center font-semibold mt-1">
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-600 block">Phần II (Đúng/Sai)</span>
+                                <input type="number" id="scoreP2" value="4.0" step="1.0" class="w-full border rounded px-2 py-1 text-center font-semibold mt-1">
+                            </div>
+                            <div>
+                                <span class="text-xs text-gray-600 block">Phần III (Tự luận)</span>
+                                <input type="number" id="scoreP3" value="3.0" step="0.5" class="w-full border rounded px-2 py-1 text-center font-semibold mt-1">
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-blue-700 mt-2 italic">* Tỉ lệ mức độ chuẩn CV 7991: 40% Nhận biết - 30% Thông hiểu - 20% Vận dụng - 10% Vận dụng cao.</p>
+                    </div>
+
+                    <div>
+                        <label class="block font-medium text-gray-700 mb-1">Yêu cầu sư phạm bổ sung</label>
+                        <input type="text" id="extraNote" 
+                            value="Bám sát Yêu cầu cần đạt của Chương trình GDPT 2018 và nội dung SGK Kết nối tri thức với cuộc sống. Không ra kiến thức ngoài giới hạn trên."
+                            class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none text-xs">
+                    </div>
+
+                    <button onclick="generateExam()" id="btnGenerate" 
+                        class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 mt-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>KHỞI TẠO HỒ SƠ ĐỀ THI 7991</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Khu vực hiển thị kết quả & Xuất file -->
+        <div class="lg:col-span-8 flex flex-col">
+            <div class="bg-white rounded-t-xl border border-gray-200 px-4 pt-3 flex flex-wrap justify-between items-center gap-2">
+                <div class="flex space-x-1 overflow-x-auto">
+                    <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn active px-4 py-2.5 text-sm rounded-t-lg transition">
+                        1. Ma trận đề
+                    </button>
+                    <button onclick="switchTab('spec')" id="tab-spec" class="tab-btn px-4 py-2.5 text-sm rounded-t-lg transition">
+                        2. Bản đặc tả
+                    </button>
+                    <button onclick="switchTab('exam')" id="tab-exam" class="tab-btn px-4 py-2.5 text-sm rounded-t-lg transition">
+                        3. Đề kiểm tra & Đáp án
+                    </button>
+                    <button onclick="switchTab('shuffle')" id="tab-shuffle" class="tab-btn px-4 py-2.5 text-sm rounded-t-lg transition">
+                        4. Trộn mã đề
+                    </button>
+                </div>
+
+                <div class="flex space-x-2 pb-2">
+                    <button onclick="exportFullWord()" id="btnExport" disabled
+                        class="bg-emerald-600 disabled:bg-gray-300 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
+                        <i class="fa-solid fa-file-word"></i>
+                        <span>Tải trọn bộ Word (.doc)</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-gray-200 p-4 rounded-b-xl border-x border-b border-gray-300 min-h-[650px] max-h-[82vh] overflow-y-auto relative">
+                
+                <div id="emptyState" class="flex flex-col items-center justify-center h-[550px] text-gray-500 text-center px-6">
+                    <i class="fa-solid fa-layer-group text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-lg font-semibold text-gray-700">Sẵn sàng khởi tạo đề thi chuẩn GDPT 2018</h3>
+                    <p class="text-sm max-w-md mt-1">Chọn <b>Môn học - Khối lớp - Kỳ kiểm tra</b> ở cột trái, hệ thống tự động nạp giới hạn SGK <i>Kết nối tri thức</i>. Nhấn <b>Khởi tạo hồ sơ đề thi 7991</b> để bắt đầu.</p>
+                </div>
+
+                <div id="loadingState" class="hidden flex flex-col items-center justify-center h-[550px] text-center">
+                    <div class="loader mb-4"></div>
+                    <h3 class="text-base font-bold text-blue-900">Chuyên gia khảo thí AI đang đối chiếu YCCĐ GDPT 2018...</h3>
+                    <p class="text-xs text-gray-600 mt-1">Đang lập Ma trận, Bản đặc tả và biên soạn câu hỏi chuẩn SGK Kết nối tri thức.</p>
+                </div>
+
+                <div id="previewContainer" class="hidden">
+                    <div id="content-matrix" class="doc-preview"></div>
+                    <div id="content-spec" class="doc-preview hidden"></div>
+                    <div id="content-exam" class="doc-preview hidden"></div>
+                    <div id="content-shuffle" class="hidden space-y-4">
+                        <div class="bg-white p-4 rounded-lg shadow-sm flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex items-center space-x-3">
+                                <label class="text-sm font-bold text-gray-700">Số lượng mã đề cần tạo:</label>
+                                <select id="numVersions" class="border rounded px-3 py-1.5 text-sm font-semibold">
+                                    <option value="2">2 mã đề (101, 102)</option>
+                                    <option value="4" selected>4 mã đề (101, 102, 103, 104)</option>
+                                </select>
+                                <button onclick="generateShuffledVersions()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-1.5 rounded-lg transition">
+                                    <i class="fa-solid fa-shuffle mr-1"></i> Tiến hành trộn đề
+                                </button>
+                            </div>
+                            <button onclick="exportShuffledWord()" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition">
+                                <i class="fa-solid fa-download mr-1"></i> Xuất các mã đề trộn ra Word
+                            </button>
+                        </div>
+                        <div id="shuffledOutput" class="doc-preview"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentExamData = null;
+        let shuffledDataList = [];
+
+        // KHO DỮ LIỆU GIỚI HẠN CHƯƠNG TRÌNH GDPT 2018 - BỘ SÁCH KẾT NỐI TRI THỨC VỚI CUỘC SỐNG
+        const KNTT_CURRICULUM = {
+            "Tin học": {
+                "6": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chủ đề 1. Máy tính và cộng đồng:\n- Bài 1: Thông tin và dữ liệu.\n- Bài 2: Xử lí thông tin.\n- Bài 3: Thông tin trong máy tính.\nChủ đề 2. Mạng máy tính và Internet:\n- Bài 4: Mạng máy tính.",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chủ đề 2. Mạng máy tính và Internet:\n- Bài 5: Internet.\nChủ đề 3. Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin:\n- Bài 6: Mạng thông tin toàn cầu.\n- Bài 7: Tìm kiếm thông tin trên Internet.\n- Bài 8: Thư điện tử.\nChủ đề 4. Đạo đức, pháp luật và văn hóa trong môi trường số:\n- Bài 9: An toàn thông tin trên Internet.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chủ đề 5. Ứng dụng tin học:\n- Bài 10: Sơ đồ tư duy.\n- Bài 11: Định dạng văn bản.\n- Bài 12: Trình bày thông tin ở dạng bảng.",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chủ đề 5. Ứng dụng tin học:\n- Bài 13: Thực hành: Tìm kiếm và thay thế.\n- Bài 14: Thực hành tổng hợp: Hoàn thiện sổ lưu niệm.\nChủ đề 6. Giải quyết vấn đề với sự trợ giúp của máy tính:\n- Bài 15: Thuật toán.\n- Bài 16: Các cấu trúc điều khiển.\n- Bài 17: Chương trình máy tính."
+                },
+                "7": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chủ đề 1. Máy tính và cộng đồng:\n- Bài 1: Thiết bị vào - ra.\n- Bài 2: Phần mềm máy tính.\n- Bài 3: Quản lí dữ liệu trong máy tính.\nChủ đề 2. Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin:\n- Bài 4: Mạng xã hội và một số kênh trao đổi thông tin trên Internet.",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chủ đề 3. Đạo đức, pháp luật và văn hóa trong môi trường số:\n- Bài 5: Ứng xử trên mạng.\nChủ đề 4. Ứng dụng tin học:\n- Bài 6: Làm quen với phần mềm bảng tính.\n- Bài 7: Tính toán tự động trên trang tính.\n- Bài 8: Công cụ hỗ trợ tính toán.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chủ đề 4. Ứng dụng tin học (tiếp):\n- Bài 9: Trình bày bảng tính.\n- Bài 10: Hoàn thiện bảng tính.\n- Bài 11: Tạo bài trình chiếu.\n- Bài 12: Định dạng đối tượng trên trang chiếu.",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chủ đề 4. Ứng dụng tin học (tiếp):\n- Bài 13: Thực hành tổng hợp: Hoàn thiện bài trình chiếu.\nChủ đề 5. Giải quyết vấn đề với sự trợ giúp của máy tính:\n- Bài 14: Thuật toán tìm kiếm tuần tự.\n- Bài 15: Thuật toán tìm kiếm nhị phân.\n- Bài 16: Thuật toán sắp xếp."
+                },
+                "8": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chủ đề 1. Máy tính và cộng đồng:\n- Bài 1: Lược sử công cụ tính toán.\nChủ đề 2. Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin:\n- Bài 2: Thông tin trong môi trường số.\n- Bài 3: Thực hành: Khai thác thông tin số.\nChủ đề 3. Đạo đức, pháp luật và văn hóa trong môi trường số:\n- Bài 4: Đạo đức và văn hóa trong sử dụng công nghệ kĩ thuật số.",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chủ đề 4. Ứng dụng tin học:\n- Bài 5: Sử dụng bảng tính giải quyết bài toán thực tế.\n- Bài 6: Sắp xếp và lọc dữ liệu.\n- Bài 7: Trình bày dữ liệu bằng biểu đồ.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chủ đề 4. Ứng dụng tin học (tiếp):\n- Bài 8a: Làm việc với danh sách dạng liệt kê và hình ảnh trong văn bản.\n- Bài 9a: Tạo đầu trang, chân trang cho văn bản.\n- Bài 10a: Định dạng nâng cao cho trang chiếu.\n- Bài 11a: Sử dụng bản mẫu tạo bài trình chiếu.",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chủ đề 5. Giải quyết vấn đề với sự trợ giúp của máy tính:\n- Bài 12: Từ thuật toán đến chương trình.\n- Bài 13: Biểu diễn dữ liệu.\n- Bài 14: Cấu trúc điều khiển.\n- Bài 15: Gỡ lỗi.\nChủ đề 6. Hướng nghiệp với tin học:\n- Bài 16: Tin học với nghề nghiệp."
+                },
+                "9": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chủ đề 1. Máy tính và cộng đồng:\n- Bài 1: Thế giới kĩ thuật số.\nChủ đề 2. Tổ chức lưu trữ, tìm kiếm và trao đổi thông tin:\n- Bài 2: Thông tin trong giải quyết vấn đề.\n- Bài 3: Thực hành: Đánh giá chất lượng thông tin.\nChủ đề 3. Đạo đức, pháp luật và văn hóa trong môi trường số:\n- Bài 4: Một số vấn đề pháp lí về sử dụng dịch vụ Internet.",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chủ đề 4. Ứng dụng tin học:\n- Bài 5: Tìm hiểu phần mềm mô phỏng.\n- Bài 6: Thực hành: Khai thác phần mềm mô phỏng.\n- Bài 7: Trình bày thông tin trong trao đổi và hợp tác.\n- Bài 8: Thực hành: Sử dụng công cụ trực quan trình bày thông tin trong trao đổi và hợp tác.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chủ đề 4. Ứng dụng tin học (Lựa chọn B - Bảng tính):\n- Bài 9b: Sử dụng công cụ xác thực dữ liệu.\n- Bài 10b: Sử dụng hàm COUNTIF.\n- Bài 11b: Sử dụng hàm SUMIF.",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chủ đề 4. Ứng dụng tin học (tiếp):\n- Bài 12b: Sử dụng hàm IF.\n- Bài 13b: Hoàn thiện bảng tính quản lí tài chính gia đình.\nChủ đề 5. Giải quyết vấn đề với sự trợ giúp của máy tính:\n- Bài 14: Giải quyết vấn đề.\n- Bài 15: Bài toán tin học.\n- Bài 16: Thực hành: Lập chương trình máy tính.\nChủ đề 6. Hướng nghiệp với tin học:\n- Bài 17: Tin học và thế giới nghề nghiệp."
+                }
+            },
+            "Toán": {
+                "6": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Tập hợp các số tự nhiên (Bài 1 đến Bài 12: Tập hợp, phép cộng trừ nhân chia, lũy thừa, thứ tự thực hiện phép tính).\nChương IV. Một số hình phẳng trong thực tiễn (Bài 18, 19: Hình tam giác đều, hình vuông, hình lục giác đều, hình chữ nhật, hình thoi).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Tính chia hết trong tập hợp các số tự nhiên (Ước và bội, dấu hiệu chia hết, số nguyên tố, ƯCLN, BCNN).\nChương III. Số nguyên (Tập hợp số nguyên, các phép tính với số nguyên, quy tắc dấu ngoặc).\nChương IV. Một số hình phẳng trong thực tiễn (Chu vi và diện tích các hình).\nChương V. Tính đối xứng của hình phẳng trong tự nhiên (Hình có trục đối xứng, tâm đối xứng).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Phân số (Mở rộng phân số, so sánh, phép cộng trừ nhân chia phân số, hai bài toán về phân số).\nChương VIII. Những hình học cơ bản (Điểm, đường thẳng, tia, đoạn thẳng, độ dài đoạn thẳng).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII. Số thập phân (Số thập phân, tính toán với số thập phân, làm tròn và ước lượng, tỉ số và tỉ số phần trăm).\nChương VIII. Những hình học cơ bản (Trung điểm đoạn thẳng, góc, số đo góc).\nChương IX. Dữ liệu và xác suất thực nghiệm (Thu thập dữ liệu, biểu đồ tranh, biểu đồ cột, xác suất thực nghiệm)."
+                },
+                "7": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Số hữu tỉ (Tập hợp số hữu tỉ, cộng trừ nhân chia, lũy thừa, thứ tự thực hiện phép tính).\nChương III. Góc và đường thẳng song song (Góc ở vị trí đặc biệt, tia phân giác, hai đường thẳng song song).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Số thực (Số vô tỉ, căn bậc hai số học, tập hợp số thực).\nChương III. Góc và đường thẳng song song (Tiên đề Euclid, định lí và chứng minh định lí).\nChương IV. Tam giác bằng nhau (Tổng các góc trong tam giác, các trường hợp bằng nhau của tam giác).\nChương V. Thu thập và biểu diễn dữ liệu (Biểu đồ hình quạt tròn, biểu đồ đoạn thẳng).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Tỉ lệ thức và đại lượng tỉ lệ (Tỉ lệ thức, tính chất dãy tỉ số bằng nhau, đại lượng tỉ lệ thuận, tỉ lệ nghịch).\nChương IX. Quan hệ giữa các yếu tố trong một tam giác (Quan hệ góc và cạnh đối diện, đường vuông góc và đường xiên, bất đẳng thức tam giác).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII. Biểu thức đại số và đa thức một biến (Đa thức một biến, cộng trừ nhân chia đa thức một biến).\nChương VIII. Làm quen với biến cố và xác suất của biến cố.\nChương IX. Quan hệ giữa các yếu tố trong một tam giác (Sự đồng quy của các đường trung tuyến, phân giác, trung trực, đường cao).\nChương X. Một số hình khối trong thực tiễn (Hình hộp chữ nhật, lập phương, lăng trụ đứng)."
+                },
+                "8": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Đa thức (Đơn thức, đa thức, phép cộng trừ nhân chia đa thức).\nChương III. Tứ giác (Tứ giác, hình thang cân, hình bình hành).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Hằng đẳng thức đáng nhớ và ứng dụng (7 hằng đẳng thức đáng nhớ, phân tích đa thức thành nhân tử).\nChương III. Tứ giác (Hình chữ nhật, hình thoi, hình vuông).\nChương IV. Định lí Thalès (Định lí Thalès, đường trung bình của tam giác, tính chất đường phân giác).\nChương V. Dữ liệu và biểu đồ.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Phân thức đại số (Tính chất cơ bản, các phép tính cộng trừ nhân chia phân thức đại số).\nChương IX. Tam giác đồng dạng (Hai tam giác đồng dạng, ba trường hợp đồng dạng của hai tam giác).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII. Phương trình bậc nhất và hàm số bậc nhất (Phương trình bậc nhất một ẩn, giải bài toán bằng cách lập phương trình, hàm số bậc nhất và đồ thị).\nChương VIII. Mở đầu về tính xác suất của biến cố.\nChương IX. Tam giác đồng dạng (Định lí Pythagore, các trường hợp đồng dạng của tam giác vuông).\nChương X. Một số hình khối trong thực tiễn (Hình chóp tam giác đều, hình chóp tứ giác đều)."
+                },
+                "9": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Phương trình và hệ hai phương trình bậc nhất hai ẩn (Khái niệm, giải hệ phương trình, giải bài toán bằng cách lập hệ phương trình).\nChương IV. Hệ thức lượng trong tam giác vuông (Tỉ số lượng giác của góc nhọn, một số hệ thức giữa cạnh và góc).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Phương trình và bất phương trình bậc nhất một ẩn (Phương trình quy về bậc nhất, bất đẳng thức, bất phương trình bậc nhất một ẩn).\nChương III. Căn bậc hai và căn bậc ba (Căn bậc hai, khai phương, rút gọn biểu thức chứa căn, căn bậc ba).\nChương V. Đường tròn (Mở đầu về đường tròn, cung và dây, độ dài cung tròn, diện tích hình quạt tròn, vị trí tương đối đường thẳng và đường tròn).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Hàm số y = ax^2 (a ≠ 0). Phương trình bậc hai một ẩn (Đồ thị hàm số y = ax^2, phương trình bậc hai một ẩn, định lí Viète và ứng dụng).\nChương IX. Đường tròn ngoại tiếp và đường tròn nội tiếp (Góc nội tiếp, tứ giác nội tiếp).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII. Tần số và tần số tương đối (Bảng tần số, biểu đồ tần số, tần số tương đối ghép nhóm).\nChương VIII. Xác suất của biến cố trong một số mô hình xác suất đơn giản.\nChương IX. Đường tròn ngoại tiếp và nội tiếp (Đa giác đều).\nChương X. Một số hình khối trong thực tiễn (Hình trụ, hình nón, hình cầu)."
+                }
+            },
+            "Khoa học tự nhiên": {
+                "6": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Mở đầu về Khoa học tự nhiên (Giới thiệu KHTN, an toàn phòng thực hành, kính lúp, kính hiển vi).\nChương II. Các phép đo (Đo chiều dài, khối lượng, thời gian, nhiệt độ).\nChương III. Các thể của chất (Sự đa dạng của chất, các thể của chất, oxygen và không khí).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương IV. Một số vật liệu, nhiên liệu, nguyên liệu, lương thực - thực phẩm thông dụng.\nChương V. Chất tinh khiết - Hỗn hợp - Phương pháp tách các chất.\nChương VI. Tế bào - Đơn vị cơ sở của sự sống.\nChương VII. Từ tế bào đến cơ thể.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VIII. Đa dạng thế giới sống (Phân loại thế giới sống, virus và vi khuẩn, nguyên sinh vật, nấm, thực vật).\nChương IX. Lực (Lực và tác dụng của lực, lực hấp dẫn và trọng lượng, lực tiếp xúc và không tiếp xúc, lực ma sát).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VIII (tiếp): Động vật, đa dạng sinh học.\nChương IX (tiếp): Biến dạng của lò xo.\nChương X. Năng lượng và cuộc sống (Các dạng năng lượng, bảo toàn năng lượng, năng lượng tái tạo).\nChương XI. Trái Đất và bầu trời (Chuyển động nhìn thấy của Mặt Trời, Mặt Trăng, hệ Mặt Trời, Ngân Hà)."
+                },
+                "7": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Nguyên tử - Sơ lược về bảng tuần hoàn các nguyên tố hóa học.\nChương II. Phân tử - Liên kết hóa học (Đơn chất, hợp chất, phân tử, liên kết ion, liên kết cộng hóa trị, hóa trị và công thức hóa học).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương III. Tốc độ (Tốc độ chuyển động, đồ thị quãng đường - thời gian, ảnh hưởng của tốc độ trong an toàn giao thông).\nChương IV. Âm thanh (Sóng âm, độ to và độ cao của âm, phản xạ âm, chống ô nhiễm tiếng ồn).\nChương V. Ánh sáng (Ánh sáng, tia sáng, vùng tối, sự phản xạ ánh sáng, ảnh của vật tạo bởi gương phẳng).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Từ (Nam châm, từ trường, từ trường Trái Đất, nam châm điện).\nChương VII. Trao đổi chất và chuyển hóa năng lượng ở sinh vật (Quang hợp ở thực vật, hô hấp tế bào).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII (tiếp): Trao đổi khí, trao đổi nước và chất dinh dưỡng ở thực vật và động vật.\nChương VIII. Cảm ứng ở sinh vật.\nChương IX. Sinh trưởng và phát triển ở sinh vật.\nChương X. Sinh sản ở sinh vật."
+                },
+                "8": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Phản ứng hóa học (Biến đổi vật lí và hóa học, phản ứng hóa học, định luật bảo toàn khối lượng, mol và tỉ khối chất khí, dung dịch và nồng độ).\nChương III. Khối lượng riêng và áp suất (Khối lượng riêng, áp suất trên một bề mặt).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Một số hợp chất thông dụng (Acid, Base, Thang pH, Oxide, Muối, Phân bón hóa học).\nChương III (tiếp): Áp suất chất lỏng, áp suất khí quyển, lực đẩy Archimedes.\nChương IV. Tác dụng làm quay của lực (Moment lực, đòn bẩy).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương V. Điện (Hiện tượng nhiễm điện do cọ xát, dòng điện, nguồn điện, mạch điện đơn giản, tác dụng của dòng điện, cường độ dòng điện và hiệu điện thế).\nChương VII. Sinh học cơ thể người (Hệ vận động, dinh dưỡng và tiêu hóa ở người).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VI. Nhiệt (Năng lượng nhiệt và nội năng, sự truyền nhiệt, sự nở vì nhiệt).\nChương VII (tiếp): Máu và hệ tuần hoàn, hệ hô hấp, hệ bài tiết, điều hòa môi trường trong, hệ thần kinh và giác quan, hệ nội tiết, da và điều hòa thân nhiệt, sinh sản ở người.\nChương VIII. Sinh vật và môi trường (Môi trường sống, quần thể, quần xã, hệ sinh thái, cân bằng tự nhiên)."
+                },
+                "9": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Năng lượng cơ học (Động năng, thế năng, cơ năng, công và công suất).\nChương II. Ánh sáng (Khúc xạ ánh sáng, tán sắc ánh sáng, màu sắc các vật, phản xạ toàn phần).\nChương VI. Kim loại - Sự khác nhau cơ bản giữa phi kim và kim loại (Tính chất chung của kim loại, dãy hoạt động hóa học).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II (tiếp): Thấu kính, kính lúp.\nChương III. Điện (Điện trở, định luật Ohm, đoạn mạch nối tiếp, đoạn mạch song song, năng lượng điện và công suất điện).\nChương VI (tiếp): Tách kim loại, hợp kim, sự khác nhau giữa phi kim và kim loại.\nChương VII. Giới thiệu về chất hữu cơ - Hydrocarbon và nguồn nhiên liệu (Alkane, Alkene).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương IV. Điện từ (Cảm ứng điện từ, dòng điện xoay chiều).\nChương V. Năng lượng với cuộc sống.\nChương VIII. Ethylic alcohol và Acetic acid.\nChương XI. Di truyền học Mendel - Cơ sở phân tử của hiện tượng di truyền (Quy luật di truyền Mendel, Nucleic acid, DNA, RNA, Protein).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương IX. Lipid - Carbohydrate - Protein - Polymer.\nChương X. Khai thác tài nguyên từ vỏ Trái Đất.\nChương XI (tiếp): Đột biến gene, nhiễm sắc thể và đột biến NST, di truyền học với con người, ứng dụng công nghệ di truyền.\nChương XII. Tiến hóa (Chọn lọc nhân tạo, chọn lọc tự nhiên, cơ chế tiến hóa, sự phát sinh và phát triển sự sống trên Trái Đất)."
+                }
+            },
+            "Ngữ văn": {
+                "6": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Tôi và các bạn (Truyện đồng thoại - Kể lại một trải nghiệm của em).\nBài 2: Gõ cửa trái tim (Thơ - Ghi lại cảm xúc về một bài thơ có yếu tố tự sự, miêu tả).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Yêu thương và chia sẻ (Truyện).\nBài 4: Quê hương yêu dấu (Thơ lục bát - Tập làm một bài thơ lục bát).\nBài 5: Những nẻo đường xứ sở (Kí - Du kí; Viết bài văn tả cảnh sinh hoạt).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Chuyện kể về những người anh hùng (Truyền thuyết - Thuyết minh thuật lại một sự kiện).\nBài 7: Thế giới cổ tích (Truyện cổ tích - Đóng vai nhân vật kể lại một truyện cổ tích).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Khác biệt và gần gũi (Văn bản nghị luận - Viết bài văn trình bày ý kiến về một hiện tượng đời sống).\nBài 9: Trái Đất - ngôi nhà chung (Văn bản thông tin - Viết biên bản).\nBài 10: Cuốn sách tôi yêu (Giới thiệu về một cuốn sách yêu thích)."
+                },
+                "7": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Bầu trời tuổi thơ (Truyện - Tóm tắt văn bản theo yêu cầu khác nhau về độ dài).\nBài 2: Khúc nhạc tâm hồn (Thơ bốn chữ, năm chữ - Viết đoạn văn ghi lại cảm xúc sau khi đọc một bài thơ bốn chữ hoặc năm chữ).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Cội nguồn yêu thương (Truyện - Phân tích đặc điểm nhân vật trong một tác phẩm văn học).\nBài 4: Giai điệu đất nước (Thơ - Biểu cảm về con người hoặc sự việc).\nBài 5: Màu sắc trăm miền (Tản văn, tùy bút - Viết văn bản tường trình).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Bài học cuộc sống (Truyện ngụ ngôn và tục ngữ - Viết bài văn nghị luận về một vấn đề trong đời sống).\nBài 7: Thế giới viễn tưởng (Truyện khoa học viễn tưởng - Kể lại sự việc có thật liên quan đến nhân vật hoặc sự kiện lịch sử).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Trải nghiệm để trưởng thành (Văn bản nghị luận - Viết bài văn nghị luận phân tích một đặc điểm nhân vật).\nBài 9: Hòa điệu với tự nhiên (Văn bản thông tin - Viết văn bản thuyết minh về một quy tắc hoặc luật lệ trong trò chơi hay hoạt động).\nBài 10: Trang sách và cuộc sống."
+                },
+                "8": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Câu chuyện của lịch sử (Truyện lịch sử - Kể lại một chuyến đi hoặc một hoạt động xã hội).\nBài 2: Vẻ đẹp cổ điển (Thơ Đường luật - Phân tích một tác phẩm văn học: bài thơ thất ngôn bát cú hoặc tứ tuyệt Đường luật).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Lời sông núi (Văn bản nghị luận - Nghị luận về một vấn đề đời sống).\nBài 4: Tiếng cười trào phúng trong thơ (Thơ trào phúng - Phân tích một tác phẩm thơ trào phúng).\nBài 5: Những câu chuyện hài (Hài kịch và truyện cười - Nghị luận về một vấn đề đời sống: một thói xấu của con người trong xã hội hiện đại).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Chân dung cuộc sống (Truyện - Phân tích một tác phẩm truyện).\nBài 7: Tin yêu và ước vọng (Thơ tự do - Ghi lại cảm nghĩ về một bài thơ tự do).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Nhà văn và trang viết (Văn bản nghị luận - Phân tích một tác phẩm văn học).\nBài 9: Hôm nay và ngày mai (Văn bản thông tin - Thuyết minh giải thích một hiện tượng tự nhiên; Viết văn bản kiến nghị về một vấn đề đời sống).\nBài 10: Sách - người bạn đồng hành."
+                },
+                "9": {
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Thế giới kì ảo (Truyện truyền kì - Viết bài văn nghị luận về một vấn đề cần giải quyết trong đời sống).\nBài 2: Những cung bậc tâm trạng (Thơ song thất lục bát - Phân tích một tác phẩm văn học: thơ song thất lục bát).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Hồn nước nằm trong tiếng mẹ cha (Truyện thơ Nôm - Phân tích một đoạn trích tác phẩm văn học).\nBài 4: Khám phá vẻ đẹp văn chương (Văn bản nghị luận - Viết bài văn nghị luận phân tích một tác phẩm văn học: truyện).\nBài 5: Đối diện với nỗi đau (Bi kịch - Nghị luận về một vấn đề cần giải quyết trong đời sống xã hội).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Giải mã những bí mật (Truyện trinh thám - Kể một câu chuyện tưởng tượng).\nBài 7: Hồn thơ muôn điệu (Thơ - Phân tích một tác phẩm văn học: thơ).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Tiếng nói của lương tri (Văn bản nghị luận - Nghị luận về một vấn đề cần giải quyết).\nBài 9: Đi qua những miền nhớ (Văn bản thông tin - Thuyết minh về một danh lam thắng cảnh hay một di tích lịch sử).\nBài 10: Văn học - lịch sử tâm hồn."
+                }
+            }
+        };
+
+        window.onload = () => {
+            const savedKey = localStorage.getItem('gemini_api_key_7991');
+            if (savedKey) document.getElementById('apiKey').value = savedKey;
+            autoFillCurriculum();
+        };
+
+        function autoFillCurriculum(forceNotify = false) {
+            const subject = document.getElementById('subject').value;
+            const grade = document.getElementById('grade').value;
+            const examType = document.getElementById('examType').value;
+            const topicsArea = document.getElementById('topics');
+            const statusText = document.getElementById('curriculumStatus');
+
+            if (KNTT_CURRICULUM[subject] && KNTT_CURRICULUM[subject][grade] && KNTT_CURRICULUM[subject][grade][examType]) {
+                topicsArea.value = KNTT_CURRICULUM[subject][grade][examType];
+                statusText.innerHTML = `<span class="text-emerald-700 font-semibold">✓ Đã nạp chuẩn ${subject} ${grade} (${examType})</span>`;
+            } else {
+                topicsArea.value = `Giới hạn chương trình ${subject} Lớp ${grade} - Bộ sách Kết nối tri thức với cuộc sống (${examType}):\n- Chủ đề / Chương 1: [Nhập tên bài học]\n- Chủ đề / Chương 2: [Nhập tên bài học]`;
+                statusText.innerHTML = `<span class="text-amber-700">Chưa có sẵn mục lục chi tiết - AI sẽ tự đối chiếu YCCĐ ${subject} ${grade} KNTT</span>`;
+            }
+            if (forceNotify) {
+                topicsArea.classList.add('ring-2', 'ring-indigo-400');
+                setTimeout(() => topicsArea.classList.remove('ring-2', 'ring-indigo-400'), 600);
+            }
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKey').value.trim();
+            if (!key) return alert("Vui lòng nhập API Key!");
+            localStorage.setItem('gemini_api_key_7991', key);
+            alert("Đã lưu API Key vào trình duyệt!");
+        }
+
+        function switchTab(tabName) {
+            ['matrix', 'spec', 'exam', 'shuffle'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.remove('active');
+                document.getElementById(`content-${t}`).classList.add('hidden');
+            });
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+        }
+
+        async function generateExam() {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            if (!apiKey) {
+                alert("Vui lòng nhập Gemini API Key ở góc trên bên phải trước khi tạo đề!");
+                document.getElementById('apiKey').focus();
+                return;
+            }
+
+            const selectedModel = document.getElementById('modelSelect').value;
+            const schoolName = document.getElementById('schoolName').value.trim();
+            const schoolYear = document.getElementById('schoolYear').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const grade = document.getElementById('grade').value;
+            const examType = document.getElementById('examType').value;
+            const duration = document.getElementById('duration').value;
+            const topics = document.getElementById('topics').value.trim();
+            const p1 = parseFloat(document.getElementById('scoreP1').value) || 0;
+            const p2 = parseFloat(document.getElementById('scoreP2').value) || 0;
+            const p3 = parseFloat(document.getElementById('scoreP3').value) || 0;
+            const extraNote = document.getElementById('extraNote').value.trim();
+
+            if (!topics) return alert("Vui lòng nhập nội dung kiến thức/bài học cần kiểm tra!");
+            if (Math.abs((p1 + p2 + p3) - 10) > 0.01) {
+                return alert(`Tổng điểm 3 phần hiện tại là ${p1 + p2 + p3} điểm. Vui lòng điều chỉnh để tổng bằng đúng 10.0 điểm!`);
+            }
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('previewContainer').classList.add('hidden');
+            document.getElementById('loadingState').classList.remove('hidden');
+            document.getElementById('btnGenerate').disabled = true;
+
+            const systemPrompt = `Bạn là Chuyên gia khảo thí giáo dục cấp THCS/THPT tại Việt Nam, am hiểu sâu sắc Chương trình GDPT 2018, bộ sách giáo khoa "Kết nối tri thức với cuộc sống" và Công văn 7991/BGDĐT-GDTrH.
+
+QUY TẮC KHẢO THÍ & GIỚI HẠN CHƯƠNG TRÌNH BẮT BUỘC:
+1. Chỉ ra câu hỏi nằm TRONG GIỚI HẠN các chủ đề/bài học được cung cấp theo đúng thuật ngữ và nội dung SGK "Kết nối tri thức với cuộc sống". Tuyệt đối không lấy kiến thức vượt quá giới hạn bài học hoặc ngoài chương trình GDPT 2018.
+2. Tổng điểm toàn bài = 10.0 điểm. Phân bổ đúng cấu trúc:
+   - Phần I (Trắc nghiệm nhiều lựa chọn): ${p1} điểm (Mỗi câu 0.25 điểm -> gồm ${Math.round(p1/0.25)} câu).
+   - Phần II (Trắc nghiệm Đúng/Sai): ${p2} điểm (Mỗi câu 1.0 điểm gồm 4 ý a, b, c, d -> gồm ${Math.round(p2/1.0)} câu).
+   - Phần III (Tự luận): ${p3} điểm.
+3. Tỉ lệ mức độ nhận thức toàn bài bám sát CV 7991: Khoảng 40% Nhận biết (NB), 30% Thông hiểu (TH), 20% Vận dụng (VD), 10% Vận dụng cao (VDC).
+4. Mỗi câu trắc nghiệm Đúng/Sai phải có 1 tình huống/ngữ liệu thực tiễn dẫn dắt, kèm 4 mệnh đề a, b, c, d đi từ Nhận biết đến Vận dụng.
+5. Bản đặc tả phải trích xuất chuẩn Yêu cầu cần đạt (YCCĐ) của Chương trình GDPT 2018 ứng với từng bài học và chỉ rõ số thứ tự câu hỏi tương ứng ở từng mức độ.
+6. Trả về DUY NHẤT một đối tượng JSON hợp lệ theo đúng cấu trúc được yêu cầu.`;
+
+            const userPrompt = `Hãy tạo hồ sơ đề kiểm tra chuẩn CV 7991 với thông tin sau:
+- Trường: ${schoolName} | Năm học: ${schoolYear}
+- Môn: ${subject} - Lớp: ${grade} (Bộ sách: Kết nối tri thức với cuộc sống)
+- Kỳ kiểm tra: ${examType} | Thời gian: ${duration} phút
+- GIỚI HẠN CHƯƠNG TRÌNH & BÀI HỌC:
+${topics}
+- Yêu cầu bổ sung: ${extraNote}
+
+Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`json):
+{
+  "ma_tran": [
+    {
+      "chu_de": "Tên chủ đề/chương",
+      "noi_dung": "Tên bài học/đơn vị kiến thức",
+      "p1_nb": 2, "p1_th": 1, "p1_vd": 0, "p1_vdc": 0,
+      "p2_nb": 0, "p2_th": 1, "p2_vd": 0, "p2_vdc": 0,
+      "p3_nb": 0, "p3_th": 0, "p3_vd": 1, "p3_vdc": 0,
+      "tong_diem": 2.75,
+      "ti_le_phan_tram": "27.5%"
+    }
+  ],
+  "ban_dac_ta": [
+    {
+      "chu_de": "Tên chủ đề",
+      "noi_dung": "Đơn vị kiến thức",
+      "yccd": "- Nhận biết: ...\\n- Thông hiểu: ...\\n- Vận dụng: ...",
+      "cau_p1": "Câu 1, 2 (NB); Câu 3 (TH)",
+      "cau_p2": "Câu 1a,b (NB); Câu 1c (TH); Câu 1d (VD)",
+      "cau_p3": "Câu 1 (VD)"
+    }
+  ],
+  "de_thi": {
+    "phan_1": [
+      {
+        "cau": 1,
+        "muc_do": "NB",
+        "noi_dung": "Nội dung câu hỏi?",
+        "phuong_an": ["Phương án A", "Phương án B", "Phương án C", "Phương án D"],
+        "dap_an_index": 0
+      }
+    ],
+    "phan_2": [
+      {
+        "cau": 1,
+        "ngu_lieu": "Đoạn tình huống thực tế...",
+        "cac_y": [
+          { "ky_hieu": "a", "noi_dung": "Phát biểu a", "dap_an": "Đúng", "muc_do": "NB" },
+          { "ky_hieu": "b", "noi_dung": "Phát biểu b", "dap_an": "Sai", "muc_do": "TH" },
+          { "ky_hieu": "c", "noi_dung": "Phát biểu c", "dap_an": "Đúng", "muc_do": "TH" },
+          { "ky_hieu": "d", "noi_dung": "Phát biểu d", "dap_an": "Sai", "muc_do": "VD" }
+        ]
+      }
+    ],
+    "phan_3": [
+      {
+        "cau": 1,
+        "muc_do": "VD",
+        "diem": 1.5,
+        "noi_dung": "Đề bài tự luận...",
+        "huong_dan_cham": "Các ý cần đạt và biểu điểm chi tiết từng ý..."
+      }
+    ]
+  }
+}`;
+
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        contents: [{ parts: [{ text: userPrompt }] }],
+                        generationConfig: {
+                            temperature: 0.35,
+                            responseMimeType: "application/json"
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
+
+                const rawText = data.candidates[0].content.parts[0].text;
+                currentExamData = JSON.parse(rawText);
+                currentExamData.meta = { schoolName, schoolYear, subject, grade, examType, duration, p1, p2, p3 };
+
+                renderAllTabs();
+                generateShuffledVersions();
+
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('previewContainer').classList.remove('hidden');
+                document.getElementById('btnExport').disabled = false;
+                switchTab('matrix');
+
+            } catch (err) {
+                console.error(err);
+                alert("Lỗi khi gọi AI: " + err.message);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('emptyState').classList.remove('hidden');
+            } finally {
+                document.getElementById('btnGenerate').disabled = false;
+            }
+        }
+
+        function renderAllTabs() {
+            const { meta, ma_tran, ban_dac_ta, de_thi } = currentExamData;
+
+            let sumP1_NB = 0, sumP1_TH = 0, sumP1_VD = 0, sumP1_VDC = 0;
+            let sumP2_NB = 0, sumP2_TH = 0, sumP2_VD = 0, sumP2_VDC = 0;
+            let sumP3_NB = 0, sumP3_TH = 0, sumP3_VD = 0, sumP3_VDC = 0;
+
+            let matrixRows = ma_tran.map((row, idx) => {
+                sumP1_NB += row.p1_nb || 0; sumP1_TH += row.p1_th || 0; sumP1_VD += row.p1_vd || 0; sumP1_VDC += row.p1_vdc || 0;
+                sumP2_NB += row.p2_nb || 0; sumP2_TH += row.p2_th || 0; sumP2_VD += row.p2_vd || 0; sumP2_VDC += row.p2_vdc || 0;
+                sumP3_NB += row.p3_nb || 0; sumP3_TH += row.p3_th || 0; sumP3_VD += row.p3_vd || 0; sumP3_VDC += row.p3_vdc || 0;
+
+                return `<tr>
+                    <td style="text-align:center;">${idx + 1}</td>
+                    <td><b>${row.chu_de}</b></td>
+                    <td>${row.noi_dung}</td>
+                    <td style="text-align:center;">${row.p1_nb || ''}</td>
+                    <td style="text-align:center;">${row.p1_th || ''}</td>
+                    <td style="text-align:center;">${row.p1_vd || ''}</td>
+                    <td style="text-align:center;">${row.p1_vdc || ''}</td>
+                    <td style="text-align:center;">${row.p2_nb || ''}</td>
+                    <td style="text-align:center;">${row.p2_th || ''}</td>
+                    <td style="text-align:center;">${row.p2_vd || ''}</td>
+                    <td style="text-align:center;">${row.p2_vdc || ''}</td>
+                    <td style="text-align:center;">${row.p3_nb || ''}</td>
+                    <td style="text-align:center;">${row.p3_th || ''}</td>
+                    <td style="text-align:center;">${row.p3_vd || ''}</td>
+                    <td style="text-align:center;">${row.p3_vdc || ''}</td>
+                    <td style="text-align:center; font-weight:bold;">${row.tong_diem}</td>
+                    <td style="text-align:center;">${row.ti_le_phan_tram}</td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('content-matrix').innerHTML = `
+                <div style="text-align:center; font-weight:bold; margin-bottom:12px;">
+                    <p style="margin:0;">${meta.schoolName.toUpperCase()}</p>
+                    <p style="margin:4px 0; font-size:14pt;">MA TRẬN ĐỀ ${meta.examType}</p>
+                    <p style="margin:0; font-style:italic; font-weight:normal;">Môn: ${meta.subject} - Lớp ${meta.grade} (SGK Kết nối tri thức) | Năm học: ${meta.schoolYear} | Thời gian: ${meta.duration} phút</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="3">TT</th>
+                            <th rowspan="3">Chủ đề / Chương</th>
+                            <th rowspan="3">Nội dung / Đơn vị kiến thức</th>
+                            <th colspan="12">Mức độ đánh giá</th>
+                            <th rowspan="3">Tổng điểm</th>
+                            <th rowspan="3">Tỉ lệ %</th>
+                        </tr>
+                        <tr>
+                            <th colspan="4">TN Nhiều lựa chọn</th>
+                            <th colspan="4">TN Đúng - Sai</th>
+                            <th colspan="4">Tự luận</th>
+                        </tr>
+                        <tr>
+                            <th>NB</th><th>TH</th><th>VD</th><th>VDC</th>
+                            <th>NB</th><th>TH</th><th>VD</th><th>VDC</th>
+                            <th>NB</th><th>TH</th><th>VD</th><th>VDC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${matrixRows}
+                        <tr style="font-weight:bold; background:#f9fafb;">
+                            <td colspan="3" style="text-align:center;">Tổng số câu / ý</td>
+                            <td style="text-align:center;">${sumP1_NB}</td><td style="text-align:center;">${sumP1_TH}</td><td style="text-align:center;">${sumP1_VD}</td><td style="text-align:center;">${sumP1_VDC}</td>
+                            <td style="text-align:center;">${sumP2_NB}</td><td style="text-align:center;">${sumP2_TH}</td><td style="text-align:center;">${sumP2_VD}</td><td style="text-align:center;">${sumP2_VDC}</td>
+                            <td style="text-align:center;">${sumP3_NB}</td><td style="text-align:center;">${sumP3_TH}</td><td style="text-align:center;">${sumP3_VD}</td><td style="text-align:center;">${sumP3_VDC}</td>
+                            <td style="text-align:center;">10.0</td>
+                            <td style="text-align:center;">100%</td>
+                        </tr>
+                        <tr style="font-weight:bold;">
+                            <td colspan="3" style="text-align:center;">Tổng điểm từng phần</td>
+                            <td colspan="4" style="text-align:center;">${meta.p1.toFixed(2)} điểm</td>
+                            <td colspan="4" style="text-align:center;">${meta.p2.toFixed(2)} điểm</td>
+                            <td colspan="4" style="text-align:center;">${meta.p3.toFixed(2)} điểm</td>
+                            <td colspan="2" style="text-align:center;">10.0 điểm</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `;
+
+            let specRows = ban_dac_ta.map((row, idx) => `
+                <tr>
+                    <td style="text-align:center;">${idx + 1}</td>
+                    <td><b>${row.chu_de}</b></td>
+                    <td>${row.noi_dung}</td>
+                    <td style="white-space:pre-line;">${row.yccd}</td>
+                    <td>${row.cau_p1 || '-'}</td>
+                    <td>${row.cau_p2 || '-'}</td>
+                    <td>${row.cau_p3 || '-'}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('content-spec').innerHTML = `
+                <div style="text-align:center; font-weight:bold; margin-bottom:12px;">
+                    <p style="margin:0;">${meta.schoolName.toUpperCase()}</p>
+                    <p style="margin:4px 0; font-size:14pt;">BẢN ĐẶC TẢ ĐỀ ${meta.examType}</p>
+                    <p style="margin:0; font-style:italic; font-weight:normal;">Môn: ${meta.subject} - Lớp ${meta.grade} (Theo CT GDPT 2018 - Kết nối tri thức) | Năm học: ${meta.schoolYear}</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:4%;">TT</th>
+                            <th style="width:16%;">Chủ đề</th>
+                            <th style="width:18%;">Nội dung kiến thức</th>
+                            <th style="width:35%;">Yêu cầu cần đạt (Theo CT GDPT 2018)</th>
+                            <th style="width:9%;">TN Nhiều LC</th>
+                            <th style="width:9%;">TN Đúng/Sai</th>
+                            <th style="width:9%;">Tự luận</th>
+                        </tr>
+                    </thead>
+                    <tbody>${specRows}</tbody>
+                </table>
+            `;
+
+            document.getElementById('content-exam').innerHTML = buildExamHTML(de_thi, "ĐỀ GỐC");
+        }
+
+        function buildExamHTML(deThiObj, maDeLabel) {
+            const { meta } = currentExamData;
+            const letters = ['A', 'B', 'C', 'D'];
+
+            let p1HTML = deThiObj.phan_1.map((q, idx) => `
+                <div style="margin-bottom:8px;">
+                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.muc_do}):</b> ${q.noi_dung}</p>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px; padding-left:15px; margin-top:3px;">
+                        ${q.phuong_an.map((opt, i) => `<div><b>${letters[i]}.</b> ${opt.replace(/^[A-D]\.\s*/, '')}</div>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            let p2HTML = deThiObj.phan_2.map((q, idx) => `
+                <div style="margin-bottom:10px;">
+                    <p style="margin:0;"><b>Câu ${idx + 1}:</b> ${q.ngu_lieu}</p>
+                    <div style="padding-left:15px; margin-top:4px;">
+                        ${q.cac_y.map(item => `<p style="margin:2px 0;"><b>${item.ky_hieu})</b> ${item.noi_dung}</p>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            let p3HTML = deThiObj.phan_3.map((q, idx) => `
+                <div style="margin-bottom:8px;">
+                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.diem} điểm - ${q.muc_do}):</b> ${q.noi_dung}</p>
+                </div>
+            `).join('');
+
+            let ansP1Cells = deThiObj.phan_1.map((q, idx) => `<th>Câu ${idx + 1}</th>`).join('');
+            let ansP1Vals = deThiObj.phan_1.map(q => `<td style="text-align:center; font-weight:bold;">${letters[q.dap_an_index]}</td>`).join('');
+
+            let ansP2Rows = deThiObj.phan_2.map((q, idx) => `
+                <tr>
+                    <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
+                    ${q.cac_y.map(y => `<td style="text-align:center;"><b>${y.ky_hieu})</b> ${y.dap_an}</td>`).join('')}
+                </tr>
+            `).join('');
+
+            let ansP3Rows = deThiObj.phan_3.map((q, idx) => `
+                <tr>
+                    <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
+                    <td style="white-space:pre-line;">${q.huong_dan_cham}</td>
+                    <td style="text-align:center; font-weight:bold;">${q.diem} đ</td>
+                </tr>
+            `).join('');
+
+            return `
+                <table style="border:none; margin-bottom:10px;">
+                    <tr style="border:none;">
+                        <td style="border:none; text-align:center; width:45%; vertical-align:top;">
+                            <b>${meta.schoolName.toUpperCase()}</b><br>
+                            <span>TỔ CHUYÊN MÔN</span><br>
+                            <span style="border:1px solid #000; padding:2px 8px; display:inline-block; margin-top:4px; font-weight:bold;">MÃ ĐỀ: ${maDeLabel}</span>
+                        </td>
+                        <td style="border:none; text-align:center; width:55%; vertical-align:top;">
+                            <b>${meta.examType}</b><br>
+                            <b>NĂM HỌC ${meta.schoolYear}</b><br>
+                            <b>Môn: ${meta.subject} - Lớp ${meta.grade}</b><br>
+                            <i>Thời gian làm bài: ${meta.duration} phút (không kể thời gian phát đề)</i>
+                        </td>
+                    </tr>
+                </table>
+                <div style="border:1px solid #000; padding:6px 10px; margin-bottom:12px;">
+                    <b>Họ và tên học sinh:</b> ....................................................................... <b>Lớp:</b> ...................
+                </div>
+
+                <p style="font-weight:bold; margin:8px 0;">PHẦN I. Trắc nghiệm nhiều phương án lựa chọn (${meta.p1} điểm). <i>Thí sinh trả lời từ câu 1 đến câu ${deThiObj.phan_1.length}. Mỗi câu hỏi thí sinh chỉ chọn một phương án.</i></p>
+                ${p1HTML}
+
+                <p style="font-weight:bold; margin:12px 0 8px 0;">PHẦN II. Trắc nghiệm đúng sai (${meta.p2} điểm). <i>Thí sinh trả lời từ câu 1 đến câu ${deThiObj.phan_2.length}. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.</i></p>
+                ${p2HTML}
+
+                <p style="font-weight:bold; margin:12px 0 8px 0;">PHẦN III. Tự luận (${meta.p3} điểm).</p>
+                ${p3HTML}
+
+                <p style="text-align:center; font-weight:bold; margin-top:15px;">--- HẾT ---</p>
+                <hr style="border-top: 2px dashed #666; margin: 25px 0;">
+
+                <div style="text-align:center; font-weight:bold; margin-bottom:10px;">
+                    <p style="font-size:13.5pt; margin:0;">HƯỚNG DẪN CHẤM VÀ BIỂU ĐIỂM - MÃ ĐỀ ${maDeLabel}</p>
+                </div>
+                <p style="font-weight:bold; margin:6px 0;">I. Phần trắc nghiệm nhiều lựa chọn (${meta.p1} điểm - Mỗi câu đúng 0.25 điểm):</p>
+                <table>
+                    <tr>${ansP1Cells}</tr>
+                    <tr>${ansP1Vals}</tr>
+                </table>
+
+                <p style="font-weight:bold; margin:6px 0;">II. Phần trắc nghiệm Đúng/Sai (${meta.p2} điểm):</p>
+                <p style="font-size:11pt; font-style:italic; margin:2px 0;">* Quy tắc tính điểm theo CV 7991: Đúng 1 ý được 0,10đ; đúng 2 ý được 0,25đ; đúng 3 ý được 0,50đ; đúng cả 4 ý được 1,00đ.</p>
+                <table>
+                    <thead><tr><th>Câu</th><th>Ý a)</th><th>Ý b)</th><th>Ý c)</th><th>Ý d)</th></tr></thead>
+                    <tbody>${ansP2Rows}</tbody>
+                </table>
+
+                <p style="font-weight:bold; margin:6px 0;">III. Phần tự luận (${meta.p3} điểm):</p>
+                <table>
+                    <thead><tr><th style="width:12%;">Câu</th><th>Nội dung yêu cầu</th><th style="width:15%;">Điểm</th></tr></thead>
+                    <tbody>${ansP3Rows}</tbody>
+                </table>
+            `;
+        }
+
+        function shuffleArray(arr) {
+            const copy = JSON.parse(JSON.stringify(arr));
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function generateShuffledVersions() {
+            if (!currentExamData) return;
+            const count = parseInt(document.getElementById('numVersions').value);
+            shuffledDataList = [];
+            let fullHTML = '';
+
+            for (let v = 0; v < count; v++) {
+                const maDe = (101 + v).toString();
+                
+                const p1Shuffled = shuffleArray(currentExamData.de_thi.phan_1).map(q => {
+                    const correctText = q.phuong_an[q.dap_an_index];
+                    const cleanOptions = q.phuong_an.map(opt => opt.replace(/^[A-D]\.\s*/, ''));
+                    const cleanCorrect = correctText.replace(/^[A-D]\.\s*/, '');
+                    const newOptions = shuffleArray(cleanOptions);
+                    const newIndex = newOptions.indexOf(cleanCorrect);
+                    return { ...q, phuong_an: newOptions, dap_an_index: newIndex };
+                });
+
+                const p2Shuffled = shuffleArray(currentExamData.de_thi.phan_2);
+                const p3Copy = JSON.parse(JSON.stringify(currentExamData.de_thi.phan_3));
+
+                const versionObj = { maDe, deThi: { phan_1: p1Shuffled, phan_2: p2Shuffled, phan_3: p3Copy } };
+                shuffledDataList.push(versionObj);
+
+                fullHTML += buildExamHTML(versionObj.deThi, maDe);
+                if (v < count - 1) {
+                    fullHTML += `<br clear="all" style="page-break-before:always" /><hr style="border: 2px solid #2563eb; margin: 30px 0;">`;
+                }
+            }
+
+            document.getElementById('shuffledOutput').innerHTML = fullHTML;
+        }
+
+        function downloadAsWord(htmlBody, filename) {
+            const header = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+                      xmlns:w='urn:schemas-microsoft-com:office:word' 
+                      xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='utf-8'><title>Export Word</title>
+                <style>
+                    @page { size: A4; margin: 2cm 1.5cm 2cm 2.5cm; }
+                    body { font-family: "Times New Roman", serif; font-size: 13pt; line-height: 1.35; }
+                    table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 11.5pt; }
+                    th, td { border: 1px solid #000; padding: 4px 6px; vertical-align: middle; }
+                    th { background-color: #f2f2f2; font-weight: bold; text-align: center; }
+                </style>
+                </head><body>`;
+            const footer = "</body></html>";
+            const sourceHTML = header + htmlBody + footer;
+
+            const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportFullWord() {
+            if (!currentExamData) return;
+            const pageBreak = `<br clear="all" style="page-break-before:always" />`;
+            const combinedHTML = 
+                document.getElementById('content-matrix').innerHTML + pageBreak +
+                document.getElementById('content-spec').innerHTML + pageBreak +
+                document.getElementById('content-exam').innerHTML;
+
+            const fileName = `HoSoDeThi7991_${currentExamData.meta.subject}_Lop${currentExamData.meta.grade}.doc`;
+            downloadAsWord(combinedHTML, fileName);
+        }
+
+        function exportShuffledWord() {
+            if (!shuffledDataList.length) return;
+            const fileName = `CacMaDeTron_${currentExamData.meta.subject}_Lop${currentExamData.meta.grade}.doc`;
+            downloadAsWord(document.getElementById('shuffledOutput').innerHTML, fileName);
+        }
+    </script>
+</body>
+</html>

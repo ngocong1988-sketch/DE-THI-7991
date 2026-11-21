@@ -792,11 +792,13 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 </div>
             `).join('');
 
-            let p3HTML = deThiObj.phan_3.map((q, idx) => `
-                <div style="margin-bottom:8px;">
-                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.diem} điểm - ${q.muc_do}):</b> ${q.noi_dung}</p>
-                </div>
-            `).join('');
+            let ansP3Rows = deThiObj.phan_3.map((q, idx) => `
+    <tr>
+        <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
+        <td style="white-space:pre-line;">${q.huong_dan_cham}</td>
+        <td style="text-align:center; font-weight:bold;">${q.diem} đ</td>
+    </tr>
+`).join('');
 
             let ansP1Cells = deThiObj.phan_1.map((q, idx) => `<th>Câu ${idx + 1}</th>`).join('');
             let ansP1Vals = deThiObj.phan_1.map(q => `<td style="text-align:center; font-weight:bold;">${letters[q.dap_an_index]}</td>`).join('');

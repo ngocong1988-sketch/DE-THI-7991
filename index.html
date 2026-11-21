@@ -70,12 +70,10 @@
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 bg-blue-950/60 px-3 py-2 rounded-lg border border-blue-700">
-                <select id="modelSelect" class="bg-blue-900 text-xs text-white border border-blue-600 rounded px-2 py-1 focus:outline-none">
-                   <select id="modelSelect" class="bg-blue-900 text-xs text-white border border-blue-600 rounded px-2 py-1 focus:outline-none max-w-[190px]">
-    <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Mới nhất)</option>
-    <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
-    <option value="gemini-3.5-pro">Gemini 3.5 Pro</option>
-</select>
+                <select id="modelSelect" class="bg-blue-900 text-xs text-white border border-blue-600 rounded px-2 py-1 focus:outline-none max-w-[190px]">
+                    <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Mới nhất)</option>
+                    <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+                    <option value="gemini-3.5-pro">Gemini 3.5 Pro (Chuyên sâu)</option>
                 </select>
                 <i class="fa-solid fa-key text-yellow-400 text-sm"></i>
                 <input type="password" id="apiKey" placeholder="Nhập Gemini API Key..." 
@@ -401,7 +399,10 @@
 
         window.onload = () => {
             const savedKey = localStorage.getItem('gemini_api_key_7991');
-            if (savedKey) document.getElementById('apiKey').value = savedKey;
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+                fetchAvailableModels(savedKey);
+            }
             autoFillCurriculum();
         };
 
@@ -429,7 +430,8 @@
             const key = document.getElementById('apiKey').value.trim();
             if (!key) return alert("Vui lòng nhập API Key!");
             localStorage.setItem('gemini_api_key_7991', key);
-            alert("Đã lưu API Key vào trình duyệt!");
+            fetchAvailableModels(key);
+            alert("Đã lưu API Key và cập nhật danh sách Model mới nhất!");
         }
 
         function switchTab(tabName) {
@@ -450,14 +452,39 @@
                 .replace(/\n/g, '<br>');
         }
 
+        async function fetchAvailableModels(apiKey) {
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+                const json = await res.json();
+                if (!json.models) return [];
+                const validModels = json.models
+                    .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
+                    .map(m => m.name.replace('models/', ''))
+                    .filter(name => name.includes('gemini') && !name.includes('vision') && !name.includes('embedding'));
+                
+                const selectEl = document.getElementById('modelSelect');
+                if (validModels.length > 0 && selectEl) {
+                    const preferred = validModels.find(m => m.includes('3.8-flash')) || validModels.find(m => m.includes('flash')) || validModels[0];
+                    selectEl.innerHTML = validModels.map(m => 
+                        `<option value="${m}" ${m === preferred ? 'selected' : ''}>${m}</option>`
+                    ).join('');
+                }
+                return validModels;
+            } catch (e) {
+                return [];
+            }
+        }
+
         async function callGeminiWithFallback(apiKey, primaryModel, systemPrompt, userPrompt) {
-            const fallbackChain = [primaryModel, 'gemini-2.0-flash', 'gemini-3.5-flash', 'gemini-3.5-pro'].filter((v, i, a) => a.indexOf(v) === i);
+            let fallbackChain = [primaryModel, 'gemini-3.8-flash', 'gemini-3.5-flash', 'gemini-3.5-pro']
+                .filter((v, i, a) => a.indexOf(v) === i);
             let lastError = null;
+            let hasFetchedLiveModels = false;
 
             for (let i = 0; i < fallbackChain.length; i++) {
                 const modelToTry = fallbackChain[i];
                 if (i > 0) {
-                    document.getElementById('loadingTitle').innerText = `Máy chủ ${fallbackChain[i-1]} đang quá tải, tự động chuyển sang ${modelToTry}...`;
+                    document.getElementById('loadingTitle').innerText = `Đang tự động chuyển sang model ${modelToTry}...`;
                 }
 
                 try {
@@ -476,22 +503,27 @@
 
                     const data = await response.json();
                     if (data.error) {
-                        const msg = data.error.message || '';
-                        if (msg.toLowerCase().includes('high demand') || msg.toLowerCase().includes('overloaded') || data.error.code === 503 || data.error.code === 429) {
-                            lastError = new Error(msg);
+                        const msg = (data.error.message || '').toLowerCase();
+                        const isModelRetired = msg.includes('no longer available') || msg.includes('not found') || msg.includes('not supported');
+                        const isOverloaded = msg.includes('high demand') || msg.includes('overloaded') || data.error.code === 503 || data.error.code === 429;
+
+                        if (isModelRetired || isOverloaded) {
+                            lastError = new Error(data.error.message);
+                            if (isModelRetired && !hasFetchedLiveModels) {
+                                hasFetchedLiveModels = true;
+                                const liveModels = await fetchAvailableModels(apiKey);
+                                liveModels.forEach(m => { if (!fallbackChain.includes(m)) fallbackChain.push(m); });
+                            }
                             continue;
                         }
-                        throw new Error(msg);
+                        throw new Error(data.error.message);
                     }
                     return data.candidates[0].content.parts[0].text;
                 } catch (err) {
                     lastError = err;
-                    if (!err.message.toLowerCase().includes('high demand') && !err.message.toLowerCase().includes('overloaded')) {
-                        throw err;
-                    }
                 }
             }
-            throw lastError || new Error("Tất cả các máy chủ AI hiện đang bận. Vui lòng thử lại sau 1 phút.");
+            throw lastError || new Error("Không tìm thấy model khả dụng. Vui lòng kiểm tra lại API Key.");
         }
 
         async function generateExam() {

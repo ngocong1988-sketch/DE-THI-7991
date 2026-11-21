@@ -38,11 +38,45 @@
             font-weight: bold;
             text-align: center;
         }
+        /* Phân số chuẩn Word không viền ngoài */
+        table.math-frac {
+            display: inline-table !important;
+            width: auto !important;
+            border-collapse: collapse !important;
+            vertical-align: middle !important;
+            margin: 0 3px !important;
+            font-size: 11.5pt !important;
+        }
+        table.math-frac td {
+            border: none !important;
+            padding: 0 4px !important;
+            text-align: center !important;
+            line-height: 1.15 !important;
+        }
+        table.math-frac tr:first-child td {
+            border-bottom: 1px solid #000 !important;
+        }
         .tab-btn.active {
             border-bottom: 3px solid #2563eb;
             color: #1d4ed8;
             font-weight: 600;
             background-color: #eff6ff;
+        }
+        .math-btn {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            padding: 2px 7px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e293b;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .math-btn:hover {
+            background: #eff6ff;
+            border-color: #3b82f6;
+            color: #1d4ed8;
         }
         .loader {
             border: 4px solid #f3f3f3;
@@ -66,7 +100,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-wide">TRỢ LÝ KHẢO THÍ CHUẨN CÔNG VĂN 7991</h1>
-                    <p class="text-xs text-blue-200">GDPT 2018 • Kết nối tri thức • Tự động tạo Đề chính thức & Đề dự phòng</p>
+                    <p class="text-xs text-blue-200">GDPT 2018 • Kết nối tri thức • Toán học chuẩn Word • Kho đề chia sẻ</p>
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 bg-blue-950/60 px-3 py-2 rounded-lg border border-blue-700">
@@ -210,51 +244,92 @@
 
         <!-- Cột phải: Khu vực hiển thị kết quả & Xuất file -->
         <div class="lg:col-span-8 flex flex-col">
-            <div class="bg-white rounded-t-xl border border-gray-200 px-4 pt-3 flex flex-wrap justify-between items-center gap-2">
+            <div class="bg-white rounded-t-xl border border-gray-200 px-3 pt-2.5 flex flex-wrap justify-between items-center gap-2">
                 <div class="flex space-x-1 overflow-x-auto">
-                    <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn active px-3.5 py-2.5 text-sm rounded-t-lg transition">
+                    <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn active px-3 py-2 text-xs sm:text-sm rounded-t-lg transition">
                         1. Ma trận
                     </button>
-                    <button onclick="switchTab('spec')" id="tab-spec" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition">
+                    <button onclick="switchTab('spec')" id="tab-spec" class="tab-btn px-3 py-2 text-xs sm:text-sm rounded-t-lg transition">
                         2. Đặc tả
                     </button>
-                    <button onclick="switchTab('exam')" id="tab-exam" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition">
-                        3. Đề gốc & Đáp án
+                    <button onclick="switchTab('exam')" id="tab-exam" class="tab-btn px-3 py-2 text-xs sm:text-sm rounded-t-lg transition">
+                        3. Đề gốc
                     </button>
-                    <button onclick="switchTab('backup')" id="tab-backup" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition text-amber-800">
-                        4. Đề dự phòng & Đáp án
+                    <button onclick="switchTab('backup')" id="tab-backup" class="tab-btn px-3 py-2 text-xs sm:text-sm rounded-t-lg transition text-amber-800">
+                        4. Đề dự phòng
                     </button>
-                    <button onclick="switchTab('shuffle')" id="tab-shuffle" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition">
+                    <button onclick="switchTab('shuffle')" id="tab-shuffle" class="tab-btn px-3 py-2 text-xs sm:text-sm rounded-t-lg transition">
                         5. Trộn mã đề
+                    </button>
+                    <button onclick="switchTab('bank')" id="tab-bank" class="tab-btn px-3 py-2 text-xs sm:text-sm rounded-t-lg transition text-emerald-800 font-medium">
+                        <i class="fa-solid fa-database mr-1"></i> 6. Kho đề (<span id="bankCount">0</span>)
                     </button>
                 </div>
 
-                <div class="flex space-x-2 pb-2">
+                <div class="flex space-x-1.5 pb-2">
+                    <button onclick="saveCurrentExamToBank(true)" id="btnSaveBank" disabled
+                        class="bg-amber-600 disabled:bg-gray-300 hover:bg-amber-700 text-white text-xs font-bold px-2.5 py-2 rounded-lg shadow transition flex items-center space-x-1" title="Lưu bộ đề đang chỉnh sửa vào Kho đề">
+                        <i class="fa-solid fa-bookmark"></i>
+                        <span>Lưu kho</span>
+                    </button>
                     <button onclick="exportFullWord()" id="btnExport" disabled
-                        class="bg-emerald-600 disabled:bg-gray-300 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
+                        class="bg-emerald-600 disabled:bg-gray-300 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow transition flex items-center space-x-1.5">
                         <i class="fa-solid fa-file-word"></i>
-                        <span>Tải trọn bộ Word (.doc)</span>
+                        <span>Tải Word (.doc)</span>
                     </button>
                 </div>
             </div>
 
+            <!-- Thanh công cụ Toán học & Chèn ảnh 1-chạm -->
+            <div id="mathToolbar" class="hidden bg-slate-100 border-x border-b border-gray-300 px-3 py-2 flex flex-wrap items-center gap-1.5 shadow-inner">
+                <span class="text-[11px] font-bold text-slate-600 mr-1"><i class="fa-solid fa-square-root-variable text-blue-700"></i> Chèn nhanh:</span>
+                <button type="button" onmousedown="event.preventDefault(); insertFraction()" class="math-btn bg-blue-50 border-blue-300 text-blue-800" title="Chèn phân số tử/mẫu">Phân số a/b</button>
+                <button type="button" onmousedown="event.preventDefault(); insertSuperscript()" class="math-btn" title="Chèn số mũ (xⁿ)">x<sup>n</sup></button>
+                <button type="button" onmousedown="event.preventDefault(); insertSubscript()" class="math-btn" title="Chèn chỉ số dưới (xₙ)">x<sub>n</sub></button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('√(')" class="math-btn" title="Căn bậc hai">√</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('±')" class="math-btn">±</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('≤')" class="math-btn">≤</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('≥')" class="math-btn">≥</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('≠')" class="math-btn">≠</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('≈')" class="math-btn">≈</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('∆')" class="math-btn">∆</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('∠')" class="math-btn">∠</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('⊥')" class="math-btn">⊥</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('∥')" class="math-btn">∥</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('∈')" class="math-btn">∈</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('π')" class="math-btn">π</button>
+                <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('°')" class="math-btn">°</button>
+                
+                <div class="h-4 w-[1px] bg-slate-300 mx-1"></div>
+                <input type="file" id="imageUploader" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                <button type="button" onmousedown="event.preventDefault(); triggerImageUpload()" class="math-btn bg-emerald-50 border-emerald-400 text-emerald-800 flex items-center gap-1" title="Chọn ảnh từ máy hoặc nhấn Ctrl+V dán thẳng ảnh vào đề">
+                    <i class="fa-regular fa-image"></i> Chèn ảnh
+                </button>
+            </div>
+
             <div class="bg-gray-200 p-4 rounded-b-xl border-x border-b border-gray-300 min-h-[650px] max-h-[82vh] overflow-y-auto relative">
                 
+                <!-- Trạng thái trống -->
                 <div id="emptyState" class="flex flex-col items-center justify-center h-[550px] text-gray-500 text-center px-6">
                     <i class="fa-solid fa-layer-group text-6xl text-gray-300 mb-4"></i>
                     <h3 class="text-lg font-semibold text-gray-700">Sẵn sàng khởi tạo bộ đôi Đề gốc & Đề dự phòng</h3>
-                    <p class="text-sm max-w-md mt-1">Hệ thống tự động thiết lập <b>Ma trận + Bản đặc tả</b> dùng chung, đồng thời biên soạn <b>01 Đề chính thức</b> và <b>01 Đề dự phòng</b> có câu hỏi khác biệt hoàn toàn.</p>
+                    <p class="text-sm max-w-md mt-1">Hệ thống tự động thiết lập <b>Ma trận + Bản đặc tả</b> dùng chung, biên soạn <b>01 Đề chính thức</b> + <b>01 Đề dự phòng</b>, hỗ trợ chèn công thức/ảnh chuẩn Word và lưu trữ kho đề chia sẻ.</p>
+                    <button onclick="switchTab('bank')" class="mt-4 text-xs bg-white border border-gray-300 hover:bg-gray-50 text-blue-700 font-semibold px-4 py-2 rounded-lg shadow-sm transition">
+                        <i class="fa-solid fa-folder-open mr-1"></i> Mở Kho đề đã lưu / Nạp file .json
+                    </button>
                 </div>
 
+                <!-- Trạng thái đang tải -->
                 <div id="loadingState" class="hidden flex flex-col items-center justify-center h-[550px] text-center">
                     <div class="loader mb-4"></div>
                     <h3 class="text-base font-bold text-blue-900" id="loadingTitle">Đang biên soạn Ma trận, Đề gốc và Đề dự phòng...</h3>
                     <p class="text-xs text-gray-600 mt-1" id="loadingSub">Quá trình khởi tạo 2 bộ đề độc lập mất khoảng 20 - 35 giây. Hệ thống tự động chuyển đổi máy chủ nếu quá tải.</p>
                 </div>
 
+                <!-- Khu vực xem trước & Chỉnh sửa trực tiếp -->
                 <div id="previewContainer" class="hidden">
-                    <div class="bg-amber-50 border border-amber-200 text-amber-800 text-xs px-3 py-1.5 rounded-lg mb-3 flex items-center justify-between">
-                        <span><i class="fa-solid fa-pen-to-square mr-1"></i> <b>Mẹo:</b> Bạn có thể nhấp chuột trực tiếp vào văn bản hoặc bảng bên dưới để chỉnh sửa trước khi tải file Word.</span>
+                    <div class="bg-blue-50 border border-blue-200 text-blue-800 text-xs px-3 py-1.5 rounded-lg mb-3 flex flex-wrap items-center justify-between gap-2">
+                        <span><i class="fa-solid fa-circle-info mr-1"></i> Đặt con trỏ vào bài làm và dùng thanh công cụ phía trên để chèn phân số, ký hiệu toán hoặc dán ảnh (<b>Ctrl+V</b>). Xuất Word không lỗi font.</span>
                     </div>
                     <div id="content-matrix" class="doc-preview" contenteditable="true"></div>
                     <div id="content-spec" class="doc-preview hidden" contenteditable="true"></div>
@@ -282,13 +357,41 @@
                     </div>
                 </div>
 
+                <!-- Tab 6: Kho lưu trữ Ngân hàng đề & Chia sẻ .JSON -->
+                <div id="content-bank" class="hidden space-y-4">
+                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                        <div class="flex flex-wrap justify-between items-center gap-3 border-b pb-3 mb-4">
+                            <div>
+                                <h3 class="text-base font-bold text-gray-800"><i class="fa-solid fa-database text-emerald-600 mr-1.5"></i> KHO LƯU TRỮ NGÂN HÀNG ĐỀ KIỂM TRA</h3>
+                                <p class="text-xs text-gray-500 mt-0.5">Lưu trữ toàn bộ Ma trận, Đặc tả, Đề gốc, Đề dự phòng (bao gồm cả công thức & hình ảnh đã chỉnh sửa).</p>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <input type="file" id="jsonBankUploader" accept=".json" class="hidden" onchange="importExamFromJSON(event)">
+                                <button onclick="document.getElementById('jsonBankUploader').click()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-import"></i> Nạp đề từ file (.json)
+                                </button>
+                                <button onclick="exportEntireBankJSON()" class="bg-slate-700 hover:bg-slate-800 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm transition flex items-center gap-1.5">
+                                    <i class="fa-solid fa-file-export"></i> Sao lưu toàn bộ kho (.json)
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="bankListContainer" class="space-y-2.5">
+                            <!-- Danh sách đề đã lưu render ở đây -->
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </main>
 
     <script>
         let currentExamData = null;
+        let currentExamId = null;
         let shuffledDataList = [];
+        let lastFocusedEditor = null;
+        const BANK_STORAGE_KEY = 'exam_bank_cv7991_v1';
 
         const KNTT_CURRICULUM = {
             "Tin học": {
@@ -339,60 +442,60 @@
                 "9": {
                     "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Phương trình và hệ hai phương trình bậc nhất hai ẩn (Khái niệm, giải hệ phương trình, giải bài toán bằng cách lập hệ phương trình).\nChương IV. Hệ thức lượng trong tam giác vuông (Tỉ số lượng giác của góc nhọn, một số hệ thức giữa cạnh và góc).",
                     "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Phương trình và bất phương trình bậc nhất một ẩn (Phương trình quy về bậc nhất, bất đẳng thức, bất phương trình bậc nhất một ẩn).\nChương III. Căn bậc hai và căn bậc ba (Căn bậc hai, khai phương, rút gọn biểu thức chứa căn, căn bậc ba).\nChương V. Đường tròn (Mở đầu về đường tròn, cung và dây, độ dài cung tròn, diện tích hình quạt tròn, vị trí tương đối đường thẳng và đường tròn).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Hàm số y = ax^2 (a ≠ 0). Phương trình bậc hai một ẩn (Đồ thị hàm số y = ax^2, phương trình bậc hai một ẩn, định lí Viète và ứng dụng).\nChương IX. Đường tròn ngoại tiếp và đường tròn nội tiếp (Góc nội tiếp, tứ giác nội tiếp).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Hàm số y = ax² (a ≠ 0). Phương trình bậc hai một ẩn (Đồ thị hàm số y = ax², phương trình bậc hai một ẩn, định lí Viète và ứng dụng).\nChương IX. Đường tròn ngoại tiếp và đường tròn nội tiếp (Góc nội tiếp, tứ giác nội tiếp).",
                     "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII. Tần số và tần số tương đối (Bảng tần số, biểu đồ tần số, tần số tương đối ghép nhóm).\nChương VIII. Xác suất của biến cố trong một số mô hình xác suất đơn giản.\nChương IX. Đường tròn ngoại tiếp và nội tiếp (Đa giác đều).\nChương X. Một số hình khối trong thực tiễn (Hình trụ, hình nón, hình cầu)."
                 }
             },
             "Khoa học tự nhiên": {
                 "6": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Mở đầu về Khoa học tự nhiên (Giới thiệu KHTN, an toàn phòng thực hành, kính lúp, kính hiển vi).\nChương II. Các phép đo (Đo chiều dài, khối lượng, thời gian, nhiệt độ).\nChương III. Các thể của chất (Sự đa dạng của chất, các thể của chất, oxygen và không khí).",
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Mở đầu về Khoa học tự nhiên.\nChương II. Các phép đo.\nChương III. Các thể của chất.",
                     "KIỂM TRA CUỐI HỌC KỲ I": "Chương IV. Một số vật liệu, nhiên liệu, nguyên liệu, lương thực - thực phẩm thông dụng.\nChương V. Chất tinh khiết - Hỗn hợp - Phương pháp tách các chất.\nChương VI. Tế bào - Đơn vị cơ sở của sự sống.\nChương VII. Từ tế bào đến cơ thể.",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VIII. Đa dạng thế giới sống (Phân loại thế giới sống, virus và vi khuẩn, nguyên sinh vật, nấm, thực vật).\nChương IX. Lực (Lực và tác dụng của lực, lực hấp dẫn và trọng lượng, lực tiếp xúc và không tiếp xúc, lực ma sát).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VIII (tiếp): Động vật, đa dạng sinh học.\nChương IX (tiếp): Biến dạng của lò xo.\nChương X. Năng lượng và cuộc sống (Các dạng năng lượng, bảo toàn năng lượng, năng lượng tái tạo).\nChương XI. Trái Đất và bầu trời (Chuyển động nhìn thấy của Mặt Trời, Mặt Trăng, hệ Mặt Trời, Ngân Hà)."
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VIII. Đa dạng thế giới sống (Virus, vi khuẩn, nguyên sinh vật, nấm, thực vật).\nChương IX. Lực (Lực và tác dụng của lực, trọng lượng, lực ma sát).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VIII (tiếp): Động vật, đa dạng sinh học.\nChương IX (tiếp): Biến dạng của lò xo.\nChương X. Năng lượng và cuộc sống.\nChương XI. Trái Đất và bầu trời."
                 },
                 "7": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Nguyên tử - Sơ lược về bảng tuần hoàn các nguyên tố hóa học.\nChương II. Phân tử - Liên kết hóa học (Đơn chất, hợp chất, phân tử, liên kết ion, liên kết cộng hóa trị, hóa trị và công thức hóa học).",
-                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương III. Tốc độ (Tốc độ chuyển động, đồ thị quãng đường - thời gian, ảnh hưởng của tốc độ trong an toàn giao thông).\nChương IV. Âm thanh (Sóng âm, độ to và độ cao của âm, phản xạ âm, chống ô nhiễm tiếng ồn).\nChương V. Ánh sáng (Ánh sáng, tia sáng, vùng tối, sự phản xạ ánh sáng, ảnh của vật tạo bởi gương phẳng).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Từ (Nam châm, từ trường, từ trường Trái Đất, nam châm điện).\nChương VII. Trao đổi chất và chuyển hóa năng lượng ở sinh vật (Quang hợp ở thực vật, hô hấp tế bào).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII (tiếp): Trao đổi khí, trao đổi nước và chất dinh dưỡng ở thực vật và động vật.\nChương VIII. Cảm ứng ở sinh vật.\nChương IX. Sinh trưởng và phát triển ở sinh vật.\nChương X. Sinh sản ở sinh vật."
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Nguyên tử - Sơ lược về bảng tuần hoàn các nguyên tố hóa học.\nChương II. Phân tử - Liên kết hóa học.",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương III. Tốc độ.\nChương IV. Âm thanh.\nChương V. Ánh sáng.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương VI. Từ.\nChương VII. Trao đổi chất và chuyển hóa năng lượng ở sinh vật (Quang hợp, hô hấp tế bào).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VII (tiếp): Trao đổi khí, nước và chất dinh dưỡng.\nChương VIII. Cảm ứng ở sinh vật.\nChương IX. Sinh trưởng và phát triển ở sinh vật.\nChương X. Sinh sản ở sinh vật."
                 },
                 "8": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Phản ứng hóa học (Biến đổi vật lí và hóa học, phản ứng hóa học, định luật bảo toàn khối lượng, mol và tỉ khối chất khí, dung dịch và nồng độ).\nChương III. Khối lượng riêng và áp suất (Khối lượng riêng, áp suất trên một bề mặt).",
-                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Một số hợp chất thông dụng (Acid, Base, Thang pH, Oxide, Muối, Phân bón hóa học).\nChương III (tiếp): Áp suất chất lỏng, áp suất khí quyển, lực đẩy Archimedes.\nChương IV. Tác dụng làm quay của lực (Moment lực, đòn bẩy).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương V. Điện (Hiện tượng nhiễm điện do cọ xát, dòng điện, nguồn điện, mạch điện đơn giản, tác dụng của dòng điện, cường độ dòng điện và hiệu điện thế).\nChương VII. Sinh học cơ thể người (Hệ vận động, dinh dưỡng và tiêu hóa ở người).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VI. Nhiệt (Năng lượng nhiệt và nội năng, sự truyền nhiệt, sự nở vì nhiệt).\nChương VII (tiếp): Máu và hệ tuần hoàn, hệ hô hấp, hệ bài tiết, điều hòa môi trường trong, hệ thần kinh và giác quan, hệ nội tiết, da và điều hòa thân nhiệt, sinh sản ở người.\nChương VIII. Sinh vật và môi trường (Môi trường sống, quần thể, quần xã, hệ sinh thái, cân bằng tự nhiên)."
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Phản ứng hóa học.\nChương III. Khối lượng riêng và áp suất.",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II. Một số hợp chất thông dụng (Acid, Base, pH, Oxide, Muối).\nChương III (tiếp): Áp suất chất lỏng, khí quyển, lực đẩy Archimedes.\nChương IV. Tác dụng làm quay của lực.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương V. Điện.\nChương VII. Sinh học cơ thể người (Hệ vận động, dinh dưỡng và tiêu hóa).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương VI. Nhiệt.\nChương VII (tiếp): Tuần hoàn, hô hấp, bài tiết, thần kinh, nội tiết, sinh sản ở người.\nChương VIII. Sinh vật và môi trường."
                 },
                 "9": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Năng lượng cơ học (Động năng, thế năng, cơ năng, công và công suất).\nChương II. Ánh sáng (Khúc xạ ánh sáng, tán sắc ánh sáng, màu sắc các vật, phản xạ toàn phần).\nChương VI. Kim loại - Sự khác nhau cơ bản giữa phi kim và kim loại (Tính chất chung của kim loại, dãy hoạt động hóa học).",
-                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II (tiếp): Thấu kính, kính lúp.\nChương III. Điện (Điện trở, định luật Ohm, đoạn mạch nối tiếp, đoạn mạch song song, năng lượng điện và công suất điện).\nChương VI (tiếp): Tách kim loại, hợp kim, sự khác nhau giữa phi kim và kim loại.\nChương VII. Giới thiệu về chất hữu cơ - Hydrocarbon và nguồn nhiên liệu (Alkane, Alkene).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương IV. Điện từ (Cảm ứng điện từ, dòng điện xoay chiều).\nChương V. Năng lượng với cuộc sống.\nChương VIII. Ethylic alcohol và Acetic acid.\nChương XI. Di truyền học Mendel - Cơ sở phân tử của hiện tượng di truyền (Quy luật di truyền Mendel, Nucleic acid, DNA, RNA, Protein).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương IX. Lipid - Carbohydrate - Protein - Polymer.\nChương X. Khai thác tài nguyên từ vỏ Trái Đất.\nChương XI (tiếp): Đột biến gene, nhiễm sắc thể và đột biến NST, di truyền học với con người, ứng dụng công nghệ di truyền.\nChương XII. Tiến hóa (Chọn lọc nhân tạo, chọn lọc tự nhiên, cơ chế tiến hóa, sự phát sinh và phát triển sự sống trên Trái Đất)."
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Chương I. Năng lượng cơ học.\nChương II. Ánh sáng (Khúc xạ, tán sắc, phản xạ toàn phần).\nChương VI. Kim loại - Sự khác nhau cơ bản giữa phi kim và kim loại.",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Chương II (tiếp): Thấu kính, kính lúp.\nChương III. Điện (Định luật Ohm, đoạn mạch nối tiếp, song song, công suất điện).\nChương VI (tiếp): Tách kim loại, hợp kim.\nChương VII. Hydrocarbon và nguồn nhiên liệu.",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Chương IV. Điện từ.\nChương V. Năng lượng với cuộc sống.\nChương VIII. Ethylic alcohol và Acetic acid.\nChương XI. Di truyền học Mendel - Cơ sở phân tử của hiện tượng di truyền.",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Chương IX. Lipid - Carbohydrate - Protein - Polymer.\nChương X. Khai thác tài nguyên từ vỏ Trái Đất.\nChương XI (tiếp): Đột biến gene, NST, công nghệ di truyền.\nChương XII. Tiến hóa."
                 }
             },
             "Ngữ văn": {
                 "6": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Tôi và các bạn (Truyện đồng thoại - Kể lại một trải nghiệm của em).\nBài 2: Gõ cửa trái tim (Thơ - Ghi lại cảm xúc về một bài thơ có yếu tố tự sự, miêu tả).",
-                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Yêu thương và chia sẻ (Truyện).\nBài 4: Quê hương yêu dấu (Thơ lục bát - Tập làm một bài thơ lục bát).\nBài 5: Những nẻo đường xứ sở (Kí - Du kí; Viết bài văn tả cảnh sinh hoạt).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Chuyện kể về những người anh hùng (Truyền thuyết - Thuyết minh thuật lại một sự kiện).\nBài 7: Thế giới cổ tích (Truyện cổ tích - Đóng vai nhân vật kể lại một truyện cổ tích).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Khác biệt và gần gũi (Văn bản nghị luận - Viết bài văn trình bày ý kiến về một hiện tượng đời sống).\nBài 9: Trái Đất - ngôi nhà chung (Văn bản thông tin - Viết biên bản).\nBài 10: Cuốn sách tôi yêu (Giới thiệu về một cuốn sách yêu thích)."
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Tôi và các bạn (Truyện đồng thoại).\nBài 2: Gõ cửa trái tim (Thơ).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Yêu thương và chia sẻ (Truyện).\nBài 4: Quê hương yêu dấu (Thơ lục bát).\nBài 5: Những nẻo đường xứ sở (Kí - Du kí).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Chuyện kể về những người anh hùng (Truyền thuyết).\nBài 7: Thế giới cổ tích (Truyện cổ tích).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Khác biệt và gần gũi (Văn bản nghị luận).\nBài 9: Trái Đất - ngôi nhà chung (Văn bản thông tin)."
                 },
                 "7": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Bầu trời tuổi thơ (Truyện - Tóm tắt văn bản theo yêu cầu khác nhau về độ dài).\nBài 2: Khúc nhạc tâm hồn (Thơ bốn chữ, năm chữ - Viết đoạn văn ghi lại cảm xúc sau khi đọc một bài thơ bốn chữ hoặc năm chữ).",
-                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Cội nguồn yêu thương (Truyện - Phân tích đặc điểm nhân vật trong một tác phẩm văn học).\nBài 4: Giai điệu đất nước (Thơ - Biểu cảm về con người hoặc sự việc).\nBài 5: Màu sắc trăm miền (Tản văn, tùy bút - Viết văn bản tường trình).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Bài học cuộc sống (Truyện ngụ ngôn và tục ngữ - Viết bài văn nghị luận về một vấn đề trong đời sống).\nBài 7: Thế giới viễn tưởng (Truyện khoa học viễn tưởng - Kể lại sự việc có thật liên quan đến nhân vật hoặc sự kiện lịch sử).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Trải nghiệm để trưởng thành (Văn bản nghị luận - Viết bài văn nghị luận phân tích một đặc điểm nhân vật).\nBài 9: Hòa điệu với tự nhiên (Văn bản thông tin - Viết văn bản thuyết minh về một quy tắc hoặc luật lệ trong trò chơi hay hoạt động).\nBài 10: Trang sách và cuộc sống."
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Bầu trời tuổi thơ (Truyện).\nBài 2: Khúc nhạc tâm hồn (Thơ bốn chữ, năm chữ).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Cội nguồn yêu thương (Truyện).\nBài 4: Giai điệu đất nước (Thơ).\nBài 5: Màu sắc trăm miền (Tản văn, tùy bút).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Bài học cuộc sống (Truyện ngụ ngôn và tục ngữ).\nBài 7: Thế giới viễn tưởng (Truyện khoa học viễn tưởng).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Trải nghiệm để trưởng thành (Văn bản nghị luận).\nBài 9: Hòa điệu với tự nhiên (Văn bản thông tin)."
                 },
                 "8": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Câu chuyện của lịch sử (Truyện lịch sử - Kể lại một chuyến đi hoặc một hoạt động xã hội).\nBài 2: Vẻ đẹp cổ điển (Thơ Đường luật - Phân tích một tác phẩm văn học: bài thơ thất ngôn bát cú hoặc tứ tuyệt Đường luật).",
-                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Lời sông núi (Văn bản nghị luận - Nghị luận về một vấn đề đời sống).\nBài 4: Tiếng cười trào phúng trong thơ (Thơ trào phúng - Phân tích một tác phẩm thơ trào phúng).\nBài 5: Những câu chuyện hài (Hài kịch và truyện cười - Nghị luận về một vấn đề đời sống: một thói xấu của con người trong xã hội hiện đại).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Chân dung cuộc sống (Truyện - Phân tích một tác phẩm truyện).\nBài 7: Tin yêu và ước vọng (Thơ tự do - Ghi lại cảm nghĩ về một bài thơ tự do).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Nhà văn và trang viết (Văn bản nghị luận - Phân tích một tác phẩm văn học).\nBài 9: Hôm nay và ngày mai (Văn bản thông tin - Thuyết minh giải thích một hiện tượng tự nhiên; Viết văn bản kiến nghị về một vấn đề đời sống).\nBài 10: Sách - người bạn đồng hành."
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Câu chuyện của lịch sử (Truyện lịch sử).\nBài 2: Vẻ đẹp cổ điển (Thơ Đường luật).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Lời sông núi (Văn bản nghị luận).\nBài 4: Tiếng cười trào phúng trong thơ.\nBài 5: Những câu chuyện hài (Hài kịch và truyện cười).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Chân dung cuộc sống (Truyện).\nBài 7: Tin yêu và ước vọng (Thơ tự do).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Nhà văn và trang viết (Văn bản nghị luận).\nBài 9: Hôm nay và ngày mai (Văn bản thông tin)."
                 },
                 "9": {
-                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Thế giới kì ảo (Truyện truyền kì - Viết bài văn nghị luận về một vấn đề cần giải quyết trong đời sống).\nBài 2: Những cung bậc tâm trạng (Thơ song thất lục bát - Phân tích một tác phẩm văn học: thơ song thất lục bát).",
-                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Hồn nước nằm trong tiếng mẹ cha (Truyện thơ Nôm - Phân tích một đoạn trích tác phẩm văn học).\nBài 4: Khám phá vẻ đẹp văn chương (Văn bản nghị luận - Viết bài văn nghị luận phân tích một tác phẩm văn học: truyện).\nBài 5: Đối diện với nỗi đau (Bi kịch - Nghị luận về một vấn đề cần giải quyết trong đời sống xã hội).",
-                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Giải mã những bí mật (Truyện trinh thám - Kể một câu chuyện tưởng tượng).\nBài 7: Hồn thơ muôn điệu (Thơ - Phân tích một tác phẩm văn học: thơ).",
-                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Tiếng nói của lương tri (Văn bản nghị luận - Nghị luận về một vấn đề cần giải quyết).\nBài 9: Đi qua những miền nhớ (Văn bản thông tin - Thuyết minh về một danh lam thắng cảnh hay một di tích lịch sử).\nBài 10: Văn học - lịch sử tâm hồn."
+                    "KIỂM TRA GIỮA HỌC KỲ I": "Bài 1: Thế giới kì ảo (Truyện truyền kì).\nBài 2: Những cung bậc tâm trạng (Thơ song thất lục bát).",
+                    "KIỂM TRA CUỐI HỌC KỲ I": "Bài 3: Hồn nước nằm trong tiếng mẹ cha (Truyện thơ Nôm).\nBài 4: Khám phá vẻ đẹp văn chương (Văn bản nghị luận).\nBài 5: Đối diện với nỗi đau (Bi kịch).",
+                    "KIỂM TRA GIỮA HỌC KỲ II": "Bài 6: Giải mã những bí mật (Truyện trinh thám).\nBài 7: Hồn thơ muôn điệu (Thơ).",
+                    "KIỂM TRA CUỐI HỌC KỲ II": "Bài 8: Tiếng nói của lương tri (Văn bản nghị luận).\nBài 9: Đi qua những miền nhớ (Văn bản thông tin)."
                 }
             }
         };
@@ -404,7 +507,145 @@
                 fetchAvailableModels(savedKey);
             }
             autoFillCurriculum();
+            setupEditorPasteAndFocus();
+            renderExamBankList();
         };
+
+        // Theo dõi vùng soạn thảo đang chọn & hỗ trợ dán ảnh trực tiếp Ctrl+V
+        function setupEditorPasteAndFocus() {
+            const editors = ['content-matrix', 'content-spec', 'content-exam', 'content-backup', 'shuffledOutput'];
+            editors.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.addEventListener('focus', () => { lastFocusedEditor = el; });
+                el.addEventListener('paste', (e) => {
+                    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+                    for (let item of items) {
+                        if (item.type.indexOf('image') === 0) {
+                            e.preventDefault();
+                            const blob = item.getAsFile();
+                            compressAndInsertImage(blob);
+                            break;
+                        }
+                    }
+                });
+            });
+        }
+
+        // Các hàm chèn công thức Toán học & Ảnh 1-chạm
+        function insertHTMLAtCursor(html) {
+            const sel = window.getSelection();
+            if (sel && sel.rangeCount > 0) {
+                let container = sel.getRangeAt(0).commonAncestorContainer;
+                if (container.nodeType === 3) container = container.parentNode;
+                if (container && container.closest && container.closest('.doc-preview')) {
+                    document.execCommand('insertHTML', false, html);
+                    return;
+                }
+            }
+            // Nếu chưa đặt con trỏ, tự động chèn vào cuối tab đang mở
+            const activeTab = document.querySelector('.doc-preview:not(.hidden)');
+            if (activeTab) {
+                activeTab.focus();
+                document.execCommand('insertHTML', false, html);
+            } else {
+                alert("Vui lòng nhấp chuột vào vị trí cần chèn trong đề thi trước!");
+            }
+        }
+
+        function insertFraction() {
+            const fracHTML = `&nbsp;<table class="math-frac"><tr><td>tử số</td></tr><tr><td>mẫu số</td></tr></table>&nbsp;`;
+            insertHTMLAtCursor(fracHTML);
+        }
+
+        function insertSuperscript() {
+            const selText = window.getSelection().toString() || '2';
+            insertHTMLAtCursor(`<sup>${selText}</sup>`);
+        }
+
+        function insertSubscript() {
+            const selText = window.getSelection().toString() || '1';
+            insertHTMLAtCursor(`<sub>${selText}</sub>`);
+        }
+
+        function triggerImageUpload() {
+            document.getElementById('imageUploader').click();
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            compressAndInsertImage(file);
+            event.target.value = '';
+        }
+
+        // Nén và thu nhỏ kích thước ảnh để không bị tràn lề Word và nhẹ file lưu trữ
+        function compressAndInsertImage(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const maxWidth = 240; // Kích thước chuẩn gọn trong câu hỏi Word
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/png', 0.85);
+                    insertHTMLAtCursor(`<br><img src="${dataUrl}" width="${width}" height="${height}" style="max-width:240px; height:auto; margin:6px 0; border:1px solid #e2e8f0;" /><br>`);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Chuẩn hóa công thức Toán học từ văn bản AI sang định dạng HTML chuẩn Word (không lỗi LaTeX)
+        function formatMathAndLines(text) {
+            if (!text) return '';
+            let str = String(text)
+                // Loại bỏ dấu bọc LaTeX $ nếu AI lỡ sinh ra
+                .replace(/\$\$/g, '')
+                .replace(/\$/g, '')
+                // Chuyển đổi các lệnh LaTeX phổ biến sang ký tự Unicode chuẩn Word
+                .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '<table class="math-frac"><tr><td>$1</td></tr><tr><td>$2</td></tr></table>')
+                .replace(/\\sqrt\{([^{}]+)\}/g, '√($1)')
+                .replace(/\\sqrt/g, '√')
+                .replace(/\\leq/g, '≤')
+                .replace(/\\geq/g, '≥')
+                .replace(/\\neq/g, '≠')
+                .replace(/\\approx/g, '≈')
+                .replace(/\\pm/g, '±')
+                .replace(/\\times/g, '×')
+                .replace(/\\div/g, '÷')
+                .replace(/\\cdot/g, '.')
+                .replace(/\\Delta/g, '∆')
+                .replace(/\\angle/g, '∠')
+                .replace(/\\perp/g, '⊥')
+                .replace(/\\parallel/g, '∥')
+                .replace(/\\in/g, '∈')
+                .replace(/\\notin/g, '∉')
+                .replace(/\\cup/g, '∪')
+                .replace(/\\cap/g, '∩')
+                .replace(/\\pi/g, 'π')
+                .replace(/\\alpha/g, 'α')
+                .replace(/\\beta/g, 'β')
+                .replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>')
+                .replace(/\^([0-9a-zA-Z+-])/g, '<sup>$1</sup>')
+                .replace(/\_\{([^{}]+)\}/g, '<sub>$1</sub>')
+                .replace(/\_([0-9a-zA-Z])/g, '<sub>$1</sub>')
+                // Ngắt dòng rõ ràng các ý a), b), c), d) và gạch đầu dòng
+                .replace(/([.:;?!])\s*([a-d]\))/gi, '$1<br><b>$2</b>')
+                .replace(/^([a-d]\))/i, '<b>$1</b>')
+                .replace(/([.:;?!])\s*([-+•]\s+)/g, '$1<br>&nbsp;&nbsp;$2')
+                .replace(/\n/g, '<br>');
+            return str;
+        }
 
         function autoFillCurriculum(forceNotify = false) {
             const subject = document.getElementById('subject').value;
@@ -435,21 +676,30 @@
         }
 
         function switchTab(tabName) {
-            ['matrix', 'spec', 'exam', 'backup', 'shuffle'].forEach(t => {
+            ['matrix', 'spec', 'exam', 'backup', 'shuffle', 'bank'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.remove('active');
                 document.getElementById(`content-${t}`).classList.add('hidden');
             });
             document.getElementById(`tab-${tabName}`).classList.add('active');
             document.getElementById(`content-${tabName}`).classList.remove('hidden');
-        }
 
-        function formatMultiLineText(text) {
-            if (!text) return '';
-            return String(text)
-                .replace(/([.:;?!])\s*([a-d]\))/gi, '$1<br><b>$2</b>')
-                .replace(/^([a-d]\))/i, '<b>$1</b>')
-                .replace(/([.:;?!])\s*([-+•]\s+)/g, '$1<br>&nbsp;&nbsp;$2')
-                .replace(/\n/g, '<br>');
+            const toolbar = document.getElementById('mathToolbar');
+            if (tabName === 'bank') {
+                document.getElementById('emptyState').classList.add('hidden');
+                document.getElementById('previewContainer').classList.remove('hidden');
+                toolbar.classList.add('hidden');
+                renderExamBankList();
+            } else {
+                if (!currentExamData) {
+                    document.getElementById('emptyState').classList.remove('hidden');
+                    document.getElementById('previewContainer').classList.add('hidden');
+                    toolbar.classList.add('hidden');
+                } else {
+                    document.getElementById('emptyState').classList.add('hidden');
+                    document.getElementById('previewContainer').classList.remove('hidden');
+                    toolbar.classList.remove('hidden');
+                }
+            }
         }
 
         async function fetchAvailableModels(apiKey) {
@@ -554,6 +804,7 @@
 
             document.getElementById('emptyState').classList.add('hidden');
             document.getElementById('previewContainer').classList.add('hidden');
+            document.getElementById('mathToolbar').classList.add('hidden');
             document.getElementById('loadingTitle').innerText = "Đang biên soạn Ma trận, Đề gốc và Đề dự phòng...";
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('btnGenerate').disabled = true;
@@ -567,6 +818,13 @@ Xây dựng trọn bộ hồ sơ kiểm tra gồm:
 3. Hai (02) bộ đề thi độc lập dùng chung Ma trận & Bản đặc tả trên:
    - "de_chinh_thuc" (Đề gốc)
    - "de_du_phong" (Đề dự phòng - BẮT BUỘC có nội dung câu hỏi, ngữ liệu và số liệu KHÁC HOÀN TOÀN với đề chính thức, nhưng tương đương tuyệt đối về mức độ nhận thức NB/TH/VD/VDC và Yêu cầu cần đạt ở từng câu).
+
+QUY TẮC ĐỊNH DẠNG TOÁN HỌC CHUẨN WORD (RẤT QUAN TRỌNG):
+- TUYỆT ĐỐI KHÔNG dùng mã LaTeX có dấu $ (không viết $x^2$, không viết $\\frac{1}{2}$).
+- Hãy viết công thức bằng ký tự Unicode chuẩn và thẻ HTML đơn giản để mở bằng Microsoft Word không bị lỗi font:
+  + Số mũ dùng thẻ <sup> (ví dụ: x<sup>2</sup>, cm<sup>3</sup>), chỉ số dưới dùng <sub> (ví dụ: H<sub>2</sub>O, x<sub>1</sub>).
+  + Căn thức viết dạng: √(x + 1) hoặc √2.
+  + Ký hiệu dùng ký tự chuẩn: ≤, ≥, ≠, ≈, ±, ×, ÷, ∆, ∠, ⊥, ∥, ∈, ∪, ∩, π, °.
 
 QUY TẮC KHẢO THÍ BẮT BUỘC:
 - Chỉ ra câu hỏi nằm TRONG GIỚI HẠN các chủ đề/bài học được cung cấp theo đúng SGK "Kết nối tri thức với cuộc sống".
@@ -678,13 +936,17 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 const rawText = await callGeminiWithFallback(apiKey, selectedModel, systemPrompt, userPrompt);
                 currentExamData = JSON.parse(rawText);
                 currentExamData.meta = { schoolName, schoolYear, subject, grade, examType, duration, p1, p2, p3 };
+                currentExamId = 'exam_' + Date.now();
 
                 renderAllTabs();
                 generateShuffledVersions();
+                saveCurrentExamToBank(false); // Tự động lưu vào kho đề
 
                 document.getElementById('loadingState').classList.add('hidden');
                 document.getElementById('previewContainer').classList.remove('hidden');
+                document.getElementById('mathToolbar').classList.remove('hidden');
                 document.getElementById('btnExport').disabled = false;
+                document.getElementById('btnSaveBank').disabled = false;
                 switchTab('matrix');
 
             } catch (err) {
@@ -784,7 +1046,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                     <td style="text-align:center;">${idx + 1}</td>
                     <td><b>${row.chu_de}</b></td>
                     <td>${row.noi_dung}</td>
-                    <td style="line-height:1.4;">${formatMultiLineText(row.yccd)}</td>
+                    <td style="line-height:1.4;">${formatMathAndLines(row.yccd)}</td>
                     <td>${row.cau_p1 || '-'}</td>
                     <td>${row.cau_p2 || '-'}</td>
                     <td>${row.cau_p3 || '-'}</td>
@@ -824,25 +1086,25 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
 
             let p1HTML = deThiObj.phan_1.map((q, idx) => `
                 <div style="margin-bottom:8px;">
-                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.muc_do}):</b> ${q.noi_dung}</p>
+                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.muc_do}):</b> ${formatMathAndLines(q.noi_dung)}</p>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:4px; padding-left:15px; margin-top:3px;">
-                        ${q.phuong_an.map((opt, i) => `<div><b>${letters[i]}.</b> ${opt.replace(/^[A-D]\.\s*/, '')}</div>`).join('')}
+                        ${q.phuong_an.map((opt, i) => `<div><b>${letters[i]}.</b> ${formatMathAndLines(opt.replace(/^[A-D]\.\s*/, ''))}</div>`).join('')}
                     </div>
                 </div>
             `).join('');
 
             let p2HTML = deThiObj.phan_2.map((q, idx) => `
                 <div style="margin-bottom:10px;">
-                    <p style="margin:0;"><b>Câu ${idx + 1}:</b> ${q.ngu_lieu}</p>
+                    <p style="margin:0;"><b>Câu ${idx + 1}:</b> ${formatMathAndLines(q.ngu_lieu)}</p>
                     <div style="padding-left:15px; margin-top:4px;">
-                        ${q.cac_y.map(item => `<p style="margin:2px 0;"><b>${item.ky_hieu})</b> ${item.noi_dung}</p>`).join('')}
+                        ${q.cac_y.map(item => `<p style="margin:2px 0;"><b>${item.ky_hieu})</b> ${formatMathAndLines(item.noi_dung)}</p>`).join('')}
                     </div>
                 </div>
             `).join('');
 
             let p3HTML = deThiObj.phan_3.map((q, idx) => `
                 <div style="margin-bottom:8px;">
-                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.diem} điểm - ${q.muc_do}):</b> ${formatMultiLineText(q.noi_dung)}</p>
+                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.diem} điểm - ${q.muc_do}):</b> ${formatMathAndLines(q.noi_dung)}</p>
                 </div>
             `).join('');
 
@@ -859,7 +1121,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             let ansP3Rows = deThiObj.phan_3.map((q, idx) => `
                 <tr>
                     <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
-                    <td style="line-height:1.45; text-align:left;">${formatMultiLineText(q.huong_dan_cham)}</td>
+                    <td style="line-height:1.45; text-align:left;">${formatMathAndLines(q.huong_dan_cham)}</td>
                     <td style="text-align:center; font-weight:bold;">${q.diem} đ</td>
                 </tr>
             `).join('');
@@ -920,6 +1182,176 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             `;
         }
 
+        // ================= KHO LƯU TRỮ NGÂN HÀNG ĐỀ & FILE .JSON =================
+        function getExamBank() {
+            try {
+                return JSON.parse(localStorage.getItem(BANK_STORAGE_KEY)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveExamBank(list) {
+            localStorage.setItem(BANK_STORAGE_KEY, JSON.stringify(list));
+            document.getElementById('bankCount').innerText = list.length;
+        }
+
+        function saveCurrentExamToBank(showAlert = true) {
+            if (!currentExamData) return;
+            const bank = getExamBank();
+            const record = {
+                id: currentExamId || ('exam_' + Date.now()),
+                savedAt: new Date().toLocaleString('vi-VN'),
+                title: `${currentExamData.meta.subject} ${currentExamData.meta.grade} - ${currentExamData.meta.examType}`,
+                data: currentExamData,
+                editedHTML: {
+                    matrix: document.getElementById('content-matrix').innerHTML,
+                    spec: document.getElementById('content-spec').innerHTML,
+                    exam: document.getElementById('content-exam').innerHTML,
+                    backup: document.getElementById('content-backup').innerHTML
+                }
+            };
+
+            const existingIdx = bank.findIndex(item => item.id === record.id);
+            if (existingIdx >= 0) {
+                bank[existingIdx] = record;
+            } else {
+                bank.unshift(record);
+            }
+
+            try {
+                saveExamBank(bank);
+                renderExamBankList();
+                if (showAlert) alert("Đã lưu thành công bộ đề (bao gồm mọi chỉnh sửa công thức & ảnh) vào Kho đề!");
+            } catch (e) {
+                alert("Bộ nhớ trình duyệt đã đầy (do chứa nhiều ảnh dung lượng lớn). Hãy xuất bớt đề ra file .json để lưu trữ lâu dài!");
+            }
+        }
+
+        function renderExamBankList() {
+            const bank = getExamBank();
+            document.getElementById('bankCount').innerText = bank.length;
+            const container = document.getElementById('bankListContainer');
+
+            if (bank.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-gray-400 text-sm">Chưa có bộ đề nào được lưu. Hãy tạo đề mới hoặc bấm <b>"Nạp đề từ file (.json)"</b> từ đồng nghiệp.</div>`;
+                return;
+            }
+
+            container.innerHTML = bank.map(item => `
+                <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 flex flex-wrap justify-between items-center gap-3 hover:border-blue-300 transition">
+                    <div>
+                        <h4 class="font-bold text-sm text-blue-900">${item.title}</h4>
+                        <p class="text-xs text-gray-500 mt-0.5">
+                            <i class="fa-regular fa-clock mr-1"></i> Lưu lúc: ${item.savedAt} • ${item.data.meta.schoolName} (${item.data.meta.duration} phút)
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="loadExamFromBank('${item.id}')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded transition">
+                            <i class="fa-solid fa-folder-open mr-1"></i> Mở đề
+                        </button>
+                        <button onclick="exportSingleExamJSON('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 py-1.5 rounded transition" title="Xuất file .json để gửi qua Zalo cho giáo viên khác">
+                            <i class="fa-solid fa-share-nodes mr-1"></i> Xuất .json
+                        </button>
+                        <button onclick="deleteExamFromBank('${item.id}')" class="bg-red-100 hover:bg-red-200 text-red-700 text-xs font-semibold px-2.5 py-1.5 rounded transition" title="Xóa khỏi kho">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadExamFromBank(id) {
+            const bank = getExamBank();
+            const found = bank.find(item => item.id === id);
+            if (!found) return;
+
+            currentExamData = found.data;
+            currentExamId = found.id;
+
+            if (found.editedHTML) {
+                document.getElementById('content-matrix').innerHTML = found.editedHTML.matrix;
+                document.getElementById('content-spec').innerHTML = found.editedHTML.spec;
+                document.getElementById('content-exam').innerHTML = found.editedHTML.exam;
+                document.getElementById('content-backup').innerHTML = found.editedHTML.backup;
+            } else {
+                renderAllTabs();
+            }
+
+            generateShuffledVersions();
+            document.getElementById('btnExport').disabled = false;
+            document.getElementById('btnSaveBank').disabled = false;
+            switchTab('exam');
+        }
+
+        function deleteExamFromBank(id) {
+            if (!confirm("Bạn có chắc muốn xóa bộ đề này khỏi Kho lưu trữ?")) return;
+            const bank = getExamBank().filter(item => item.id !== id);
+            saveExamBank(bank);
+            renderExamBankList();
+        }
+
+        function exportSingleExamJSON(id) {
+            const found = getExamBank().find(item => item.id === id);
+            if (!found) return;
+            const blob = new Blob([JSON.stringify(found, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `DeThi_7991_${found.data.meta.subject}_Lop${found.data.meta.grade}.json`;
+            a.click();
+        }
+
+        function exportEntireBankJSON() {
+            const bank = getExamBank();
+            if (!bank.length) return alert("Kho đề đang trống!");
+            const blob = new Blob([JSON.stringify(bank, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SaoLuu_KhoDe_7991_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+        }
+
+        function importExamFromJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    const bank = getExamBank();
+                    if (Array.isArray(parsed)) {
+                        // Nạp cả kho đề
+                        parsed.forEach(item => {
+                            if (item.data && item.title) {
+                                item.id = 'exam_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+                                bank.unshift(item);
+                            }
+                        });
+                        saveExamBank(bank);
+                        renderExamBankList();
+                        alert(`Đã nạp thành công ${parsed.length} bộ đề vào Kho!`);
+                    } else if (parsed.data && parsed.title) {
+                        // Nạp 1 đề lẻ
+                        parsed.id = 'exam_' + Date.now();
+                        bank.unshift(parsed);
+                        saveExamBank(bank);
+                        renderExamBankList();
+                        loadExamFromBank(parsed.id);
+                        alert(`Đã nạp thành công bộ đề "${parsed.title}"!`);
+                    } else {
+                        alert("File .json không đúng định dạng của hệ thống!");
+                    }
+                } catch (err) {
+                    alert("Lỗi đọc file .json: " + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ================= TRỘN MÃ ĐỀ & XUẤT WORD =================
         function shuffleArray(arr) {
             const copy = JSON.parse(JSON.stringify(arr));
             for (let i = copy.length - 1; i > 0; i--) {
@@ -978,6 +1410,9 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                     table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 11.5pt; }
                     th, td { border: 1px solid #000; padding: 4px 6px; vertical-align: middle; }
                     th { background-color: #f2f2f2; font-weight: bold; text-align: center; }
+                    table.math-frac { display: inline-table; width: auto; border-collapse: collapse; vertical-align: middle; margin: 0 3px; }
+                    table.math-frac td { border: none; padding: 0 4px; text-align: center; line-height: 1.15; }
+                    table.math-frac tr:first-child td { border-bottom: 1px solid #000; }
                 </style>
                 </head><body>`;
             const footer = "</body></html>";

@@ -18,6 +18,9 @@
             padding: 20mm 15mm 20mm 25mm;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
+        .doc-preview:focus {
+            outline: 2px solid #93c5fd;
+        }
         .doc-preview table {
             width: 100%;
             border-collapse: collapse;
@@ -250,10 +253,13 @@
                 </div>
 
                 <div id="previewContainer" class="hidden">
-                    <div id="content-matrix" class="doc-preview"></div>
-                    <div id="content-spec" class="doc-preview hidden"></div>
-                    <div id="content-exam" class="doc-preview hidden"></div>
-                    <div id="content-backup" class="doc-preview hidden"></div>
+                    <div class="bg-amber-50 border border-amber-200 text-amber-800 text-xs px-3 py-1.5 rounded-lg mb-3 flex items-center justify-between">
+                        <span><i class="fa-solid fa-pen-to-square mr-1"></i> <b>Mẹo:</b> Bạn có thể nhấp chuột trực tiếp vào văn bản hoặc bảng bên dưới để chỉnh sửa trước khi tải file Word.</span>
+                    </div>
+                    <div id="content-matrix" class="doc-preview" contenteditable="true"></div>
+                    <div id="content-spec" class="doc-preview hidden" contenteditable="true"></div>
+                    <div id="content-exam" class="doc-preview hidden" contenteditable="true"></div>
+                    <div id="content-backup" class="doc-preview hidden" contenteditable="true"></div>
                     <div id="content-shuffle" class="hidden space-y-4">
                         <div class="bg-white p-4 rounded-lg shadow-sm flex flex-wrap items-center justify-between gap-3">
                             <div class="flex items-center space-x-3">
@@ -272,7 +278,7 @@
                                 <i class="fa-solid fa-download mr-1"></i> Xuất các mã đề trộn ra Word
                             </button>
                         </div>
-                        <div id="shuffledOutput" class="doc-preview"></div>
+                        <div id="shuffledOutput" class="doc-preview" contenteditable="true"></div>
                     </div>
                 </div>
 
@@ -433,7 +439,15 @@
             document.getElementById(`content-${tabName}`).classList.remove('hidden');
         }
 
-        // Hàm gọi API có cơ chế tự động chuyển Model dự phòng khi gặp lỗi quá tải (high demand / 503 / 429)
+        function formatMultiLineText(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/([.:;?!])\s*([a-d]\))/gi, '$1<br><b>$2</b>')
+                .replace(/^([a-d]\))/i, '<b>$1</b>')
+                .replace(/([.:;?!])\s*([-+•]\s+)/g, '$1<br>&nbsp;&nbsp;$2')
+                .replace(/\n/g, '<br>');
+        }
+
         async function callGeminiWithFallback(apiKey, primaryModel, systemPrompt, userPrompt) {
             const fallbackChain = [primaryModel, 'gemini-2.0-flash', 'gemini-3.5-flash', 'gemini-3.5-pro'].filter((v, i, a) => a.indexOf(v) === i);
             let lastError = null;
@@ -463,7 +477,7 @@
                         const msg = data.error.message || '';
                         if (msg.toLowerCase().includes('high demand') || msg.toLowerCase().includes('overloaded') || data.error.code === 503 || data.error.code === 429) {
                             lastError = new Error(msg);
-                            continue; // Thử sang model tiếp theo
+                            continue;
                         }
                         throw new Error(msg);
                     }
@@ -526,7 +540,7 @@ QUY TẮC KHẢO THÍ BẮT BUỘC:
   + Phần I (Trắc nghiệm nhiều lựa chọn): ${p1} điểm (Mỗi câu 0.25 điểm -> gồm ${Math.round(p1/0.25)} câu).
   + Phần II (Trắc nghiệm Đúng/Sai): ${p2} điểm (Mỗi câu 1.0 điểm gồm 4 ý a, b, c, d -> gồm ${Math.round(p2/1.0)} câu).
   + Phần III (Tự luận): ${p3} điểm.
-- Tỉ lệ mức độ nhận thức toàn bài chuẩn CV 7991: 40% Nhận biết (NB), 30% Thông hiểu (TH), 20% Vận dụng (VD), 10% Vận dụng cao (VDC).
+- Trong phần "huong_dan_cham" của tự luận, trình bày từng ý nhỏ trên từng dòng riêng biệt (ngăn cách rõ bằng \\n) kèm biểu điểm từng ý.
 - Trả về DUY NHẤT một đối tượng JSON hợp lệ theo đúng cấu trúc được yêu cầu.`;
 
             const userPrompt = `Hãy tạo hồ sơ đề kiểm tra chuẩn CV 7991 (gồm cả Đề chính thức và Đề dự phòng) với thông tin:
@@ -588,7 +602,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
         "muc_do": "VD",
         "diem": 1.5,
         "noi_dung": "Đề bài tự luận chính thức...",
-        "huong_dan_cham": "Các ý cần đạt và biểu điểm chi tiết..."
+        "huong_dan_cham": "a) Ý thứ nhất (0.75đ):\\n- Chi tiết 1\\n- Chi tiết 2\\nb) Ý thứ hai (0.75đ):\\n- Chi tiết 1"
       }
     ]
   },
@@ -620,7 +634,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
         "muc_do": "VD",
         "diem": 1.5,
         "noi_dung": "Đề bài tự luận KHÁC cho đề dự phòng...",
-        "huong_dan_cham": "Các ý cần đạt và biểu điểm chi tiết..."
+        "huong_dan_cham": "a) Ý thứ nhất (0.75đ):\\n- Chi tiết 1\\nb) Ý thứ hai (0.75đ):\\n- Chi tiết 1"
       }
     ]
   }
@@ -736,7 +750,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                     <td style="text-align:center;">${idx + 1}</td>
                     <td><b>${row.chu_de}</b></td>
                     <td>${row.noi_dung}</td>
-                    <td style="white-space:pre-line;">${row.yccd}</td>
+                    <td style="line-height:1.4;">${formatMultiLineText(row.yccd)}</td>
                     <td>${row.cau_p1 || '-'}</td>
                     <td>${row.cau_p2 || '-'}</td>
                     <td>${row.cau_p3 || '-'}</td>
@@ -792,24 +806,11 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 </div>
             `).join('');
 
-            let ansP3Rows = deThiObj.phan_3.map((q, idx) => {
-                let formattedGuide = (q.huong_dan_cham || '')
-        // Tách xuống dòng trước các ý a), b), c), d) nếu đang dính liền sau dấu câu
-                .replace(/([.:;?!])\s*([a-d]\))/gi, '$1<br><b>$2</b>')
-        // In đậm ý a), b), c), d) ở đầu dòng
-                .replace(/^([a-d]\))/i, '<b>$1</b>')
-        // Tách xuống dòng trước các gạch đầu dòng (-) hoặc dấu cộng (+)
-                .replace(/([.:;?!])\s*([-+•]\s+)/g, '$1<br>&nbsp;&nbsp;$2')
-        // Chuyển ký tự xuống dòng \n có sẵn thành thẻ <br> chuẩn Word
-            .replace(/\n/g, '<br>');
-
-            return `
-            <tr>
-                <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
-                <td style="line-height:1.45; text-align:left;">${formattedGuide}</td>
-                <td style="text-align:center; font-weight:bold;">${q.diem} đ</td>
-            </tr>`;
-            }).join('');
+            let p3HTML = deThiObj.phan_3.map((q, idx) => `
+                <div style="margin-bottom:8px;">
+                    <p style="margin:0;"><b>Câu ${idx + 1} (${q.diem} điểm - ${q.muc_do}):</b> ${formatMultiLineText(q.noi_dung)}</p>
+                </div>
+            `).join('');
 
             let ansP1Cells = deThiObj.phan_1.map((q, idx) => `<th>Câu ${idx + 1}</th>`).join('');
             let ansP1Vals = deThiObj.phan_1.map(q => `<td style="text-align:center; font-weight:bold;">${letters[q.dap_an_index]}</td>`).join('');
@@ -824,7 +825,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             let ansP3Rows = deThiObj.phan_3.map((q, idx) => `
                 <tr>
                     <td style="text-align:center; font-weight:bold;">Câu ${idx + 1}</td>
-                    <td style="white-space:pre-line;">${q.huong_dan_cham}</td>
+                    <td style="line-height:1.45; text-align:left;">${formatMultiLineText(q.huong_dan_cham)}</td>
                     <td style="text-align:center; font-weight:bold;">${q.diem} đ</td>
                 </tr>
             `).join('');

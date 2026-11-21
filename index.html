@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hệ Thống Ra Đề Kiểm Tra Chuẩn CV 7991 - Kết Nối Tri Thức</title>
+    <title>Hệ Thống Ra Đề Kiểm Tra Chuẩn CV 7991 - Đề Chính Thức & Dự Phòng</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -63,14 +63,14 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-wide">TRỢ LÝ KHẢO THÍ CHUẨN CÔNG VĂN 7991</h1>
-                    <p class="text-xs text-blue-200">Chương trình GDPT 2018 • Bộ sách Kết nối tri thức với cuộc sống</p>
+                    <p class="text-xs text-blue-200">GDPT 2018 • Kết nối tri thức • Tự động tạo Đề chính thức & Đề dự phòng</p>
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 bg-blue-950/60 px-3 py-2 rounded-lg border border-blue-700">
                 <select id="modelSelect" class="bg-blue-900 text-xs text-white border border-blue-600 rounded px-2 py-1 focus:outline-none">
-                    <option value="gemini-3.5-flash" selected>Gemini 3.5 Flash (Chuẩn)</option>
+                    <option value="gemini-2.0-flash" selected>Gemini 2.0 Flash (Ổn định)</option>
+                    <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
                     <option value="gemini-3.5-pro">Gemini 3.5 Pro (Chuyên sâu)</option>
-                    <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
                 </select>
                 <i class="fa-solid fa-key text-yellow-400 text-sm"></i>
                 <input type="password" id="apiKey" placeholder="Nhập Gemini API Key..." 
@@ -165,7 +165,7 @@
                             </label>
                             <span class="text-[11px] text-gray-500">(Có thể chỉnh sửa trực tiếp)</span>
                         </div>
-                        <textarea id="topics" rows="6" 
+                        <textarea id="topics" rows="5" 
                             class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none text-xs leading-relaxed"></textarea>
                     </div>
 
@@ -186,20 +186,20 @@
                                 <input type="number" id="scoreP3" value="3.0" step="0.5" class="w-full border rounded px-2 py-1 text-center font-semibold mt-1">
                             </div>
                         </div>
-                        <p class="text-[11px] text-blue-700 mt-2 italic">* Tỉ lệ mức độ chuẩn CV 7991: 40% Nhận biết - 30% Thông hiểu - 20% Vận dụng - 10% Vận dụng cao.</p>
+                        <p class="text-[11px] text-blue-700 mt-2 italic">* Tự động sinh 01 Đề chính thức + 01 Đề dự phòng độc lập dùng chung Ma trận & Đặc tả.</p>
                     </div>
 
                     <div>
                         <label class="block font-medium text-gray-700 mb-1">Yêu cầu sư phạm bổ sung</label>
                         <input type="text" id="extraNote" 
-                            value="Bám sát Yêu cầu cần đạt của Chương trình GDPT 2018 và nội dung SGK Kết nối tri thức với cuộc sống. Không ra kiến thức ngoài giới hạn trên."
+                            value="Bám sát Yêu cầu cần đạt của Chương trình GDPT 2018 và nội dung SGK Kết nối tri thức với cuộc sống."
                             class="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none text-xs">
                     </div>
 
                     <button onclick="generateExam()" id="btnGenerate" 
                         class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center space-x-2 mt-2">
                         <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        <span>KHỞI TẠO HỒ SƠ ĐỀ THI 7991</span>
+                        <span>TẠO ĐỀ GỐC & ĐỀ DỰ PHÒNG 7991</span>
                     </button>
                 </div>
             </div>
@@ -209,17 +209,20 @@
         <div class="lg:col-span-8 flex flex-col">
             <div class="bg-white rounded-t-xl border border-gray-200 px-4 pt-3 flex flex-wrap justify-between items-center gap-2">
                 <div class="flex space-x-1 overflow-x-auto">
-                    <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn active px-4 py-2.5 text-sm rounded-t-lg transition">
-                        1. Ma trận đề
+                    <button onclick="switchTab('matrix')" id="tab-matrix" class="tab-btn active px-3.5 py-2.5 text-sm rounded-t-lg transition">
+                        1. Ma trận
                     </button>
-                    <button onclick="switchTab('spec')" id="tab-spec" class="tab-btn px-4 py-2.5 text-sm rounded-t-lg transition">
-                        2. Bản đặc tả
+                    <button onclick="switchTab('spec')" id="tab-spec" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition">
+                        2. Đặc tả
                     </button>
-                    <button onclick="switchTab('exam')" id="tab-exam" class="tab-btn px-4 py-2.5 text-sm rounded-t-lg transition">
-                        3. Đề kiểm tra & Đáp án
+                    <button onclick="switchTab('exam')" id="tab-exam" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition">
+                        3. Đề gốc & Đáp án
                     </button>
-                    <button onclick="switchTab('shuffle')" id="tab-shuffle" class="tab-btn px-4 py-2.5 text-sm rounded-t-lg transition">
-                        4. Trộn mã đề
+                    <button onclick="switchTab('backup')" id="tab-backup" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition text-amber-800">
+                        4. Đề dự phòng & Đáp án
+                    </button>
+                    <button onclick="switchTab('shuffle')" id="tab-shuffle" class="tab-btn px-3.5 py-2.5 text-sm rounded-t-lg transition">
+                        5. Trộn mã đề
                     </button>
                 </div>
 
@@ -236,31 +239,34 @@
                 
                 <div id="emptyState" class="flex flex-col items-center justify-center h-[550px] text-gray-500 text-center px-6">
                     <i class="fa-solid fa-layer-group text-6xl text-gray-300 mb-4"></i>
-                    <h3 class="text-lg font-semibold text-gray-700">Sẵn sàng khởi tạo đề thi chuẩn GDPT 2018</h3>
-                    <p class="text-sm max-w-md mt-1">Chọn <b>Môn học - Khối lớp - Kỳ kiểm tra</b> ở cột trái, hệ thống tự động nạp giới hạn SGK <i>Kết nối tri thức</i>. Nhấn <b>Khởi tạo hồ sơ đề thi 7991</b> để bắt đầu.</p>
+                    <h3 class="text-lg font-semibold text-gray-700">Sẵn sàng khởi tạo bộ đôi Đề gốc & Đề dự phòng</h3>
+                    <p class="text-sm max-w-md mt-1">Hệ thống tự động thiết lập <b>Ma trận + Bản đặc tả</b> dùng chung, đồng thời biên soạn <b>01 Đề chính thức</b> và <b>01 Đề dự phòng</b> có câu hỏi khác biệt hoàn toàn.</p>
                 </div>
 
                 <div id="loadingState" class="hidden flex flex-col items-center justify-center h-[550px] text-center">
                     <div class="loader mb-4"></div>
-                    <h3 class="text-base font-bold text-blue-900">Chuyên gia khảo thí AI đang đối chiếu YCCĐ GDPT 2018...</h3>
-                    <p class="text-xs text-gray-600 mt-1">Đang lập Ma trận, Bản đặc tả và biên soạn câu hỏi chuẩn SGK Kết nối tri thức.</p>
+                    <h3 class="text-base font-bold text-blue-900" id="loadingTitle">Đang biên soạn Ma trận, Đề gốc và Đề dự phòng...</h3>
+                    <p class="text-xs text-gray-600 mt-1" id="loadingSub">Quá trình khởi tạo 2 bộ đề độc lập mất khoảng 20 - 35 giây. Hệ thống tự động chuyển đổi máy chủ nếu quá tải.</p>
                 </div>
 
                 <div id="previewContainer" class="hidden">
                     <div id="content-matrix" class="doc-preview"></div>
                     <div id="content-spec" class="doc-preview hidden"></div>
                     <div id="content-exam" class="doc-preview hidden"></div>
+                    <div id="content-backup" class="doc-preview hidden"></div>
                     <div id="content-shuffle" class="hidden space-y-4">
                         <div class="bg-white p-4 rounded-lg shadow-sm flex flex-wrap items-center justify-between gap-3">
                             <div class="flex items-center space-x-3">
-                                <label class="text-sm font-bold text-gray-700">Số lượng mã đề cần tạo:</label>
-                                <select id="numVersions" class="border rounded px-3 py-1.5 text-sm font-semibold">
-                                    <option value="2">2 mã đề (101, 102)</option>
-                                    <option value="4" selected>4 mã đề (101, 102, 103, 104)</option>
+                                <label class="text-sm font-bold text-gray-700">Nguồn trộn:</label>
+                                <select id="shuffleSource" onchange="generateShuffledVersions()" class="border rounded px-2.5 py-1.5 text-sm font-semibold text-blue-800">
+                                    <option value="main" selected>Trộn từ Đề chính thức</option>
+                                    <option value="backup">Trộn từ Đề dự phòng</option>
                                 </select>
-                                <button onclick="generateShuffledVersions()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-1.5 rounded-lg transition">
-                                    <i class="fa-solid fa-shuffle mr-1"></i> Tiến hành trộn đề
-                                </button>
+                                <label class="text-sm font-bold text-gray-700">Số mã đề:</label>
+                                <select id="numVersions" onchange="generateShuffledVersions()" class="border rounded px-2.5 py-1.5 text-sm font-semibold">
+                                    <option value="2">2 mã (101, 102)</option>
+                                    <option value="4" selected>4 mã (101, 102, 103, 104)</option>
+                                </select>
                             </div>
                             <button onclick="exportShuffledWord()" class="bg-blue-700 hover:bg-blue-800 text-white text-xs font-bold px-3.5 py-2 rounded-lg transition">
                                 <i class="fa-solid fa-download mr-1"></i> Xuất các mã đề trộn ra Word
@@ -278,7 +284,6 @@
         let currentExamData = null;
         let shuffledDataList = [];
 
-        // KHO DỮ LIỆU GIỚI HẠN CHƯƠNG TRÌNH GDPT 2018 - BỘ SÁCH KẾT NỐI TRI THỨC VỚI CUỘC SỐNG
         const KNTT_CURRICULUM = {
             "Tin học": {
                 "6": {
@@ -420,12 +425,57 @@
         }
 
         function switchTab(tabName) {
-            ['matrix', 'spec', 'exam', 'shuffle'].forEach(t => {
+            ['matrix', 'spec', 'exam', 'backup', 'shuffle'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.remove('active');
                 document.getElementById(`content-${t}`).classList.add('hidden');
             });
             document.getElementById(`tab-${tabName}`).classList.add('active');
             document.getElementById(`content-${tabName}`).classList.remove('hidden');
+        }
+
+        // Hàm gọi API có cơ chế tự động chuyển Model dự phòng khi gặp lỗi quá tải (high demand / 503 / 429)
+        async function callGeminiWithFallback(apiKey, primaryModel, systemPrompt, userPrompt) {
+            const fallbackChain = [primaryModel, 'gemini-2.0-flash', 'gemini-3.5-flash', 'gemini-3.5-pro'].filter((v, i, a) => a.indexOf(v) === i);
+            let lastError = null;
+
+            for (let i = 0; i < fallbackChain.length; i++) {
+                const modelToTry = fallbackChain[i];
+                if (i > 0) {
+                    document.getElementById('loadingTitle').innerText = `Máy chủ ${fallbackChain[i-1]} đang quá tải, tự động chuyển sang ${modelToTry}...`;
+                }
+
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelToTry}:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            systemInstruction: { parts: [{ text: systemPrompt }] },
+                            contents: [{ parts: [{ text: userPrompt }] }],
+                            generationConfig: {
+                                temperature: 0.4,
+                                responseMimeType: "application/json"
+                            }
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.error) {
+                        const msg = data.error.message || '';
+                        if (msg.toLowerCase().includes('high demand') || msg.toLowerCase().includes('overloaded') || data.error.code === 503 || data.error.code === 429) {
+                            lastError = new Error(msg);
+                            continue; // Thử sang model tiếp theo
+                        }
+                        throw new Error(msg);
+                    }
+                    return data.candidates[0].content.parts[0].text;
+                } catch (err) {
+                    lastError = err;
+                    if (!err.message.toLowerCase().includes('high demand') && !err.message.toLowerCase().includes('overloaded')) {
+                        throw err;
+                    }
+                }
+            }
+            throw lastError || new Error("Tất cả các máy chủ AI hiện đang bận. Vui lòng thử lại sau 1 phút.");
         }
 
         async function generateExam() {
@@ -456,23 +506,30 @@
 
             document.getElementById('emptyState').classList.add('hidden');
             document.getElementById('previewContainer').classList.add('hidden');
+            document.getElementById('loadingTitle').innerText = "Đang biên soạn Ma trận, Đề gốc và Đề dự phòng...";
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('btnGenerate').disabled = true;
 
             const systemPrompt = `Bạn là Chuyên gia khảo thí giáo dục cấp THCS/THPT tại Việt Nam, am hiểu sâu sắc Chương trình GDPT 2018, bộ sách giáo khoa "Kết nối tri thức với cuộc sống" và Công văn 7991/BGDĐT-GDTrH.
 
-QUY TẮC KHẢO THÍ & GIỚI HẠN CHƯƠNG TRÌNH BẮT BUỘC:
-1. Chỉ ra câu hỏi nằm TRONG GIỚI HẠN các chủ đề/bài học được cung cấp theo đúng thuật ngữ và nội dung SGK "Kết nối tri thức với cuộc sống". Tuyệt đối không lấy kiến thức vượt quá giới hạn bài học hoặc ngoài chương trình GDPT 2018.
-2. Tổng điểm toàn bài = 10.0 điểm. Phân bổ đúng cấu trúc:
-   - Phần I (Trắc nghiệm nhiều lựa chọn): ${p1} điểm (Mỗi câu 0.25 điểm -> gồm ${Math.round(p1/0.25)} câu).
-   - Phần II (Trắc nghiệm Đúng/Sai): ${p2} điểm (Mỗi câu 1.0 điểm gồm 4 ý a, b, c, d -> gồm ${Math.round(p2/1.0)} câu).
-   - Phần III (Tự luận): ${p3} điểm.
-3. Tỉ lệ mức độ nhận thức toàn bài bám sát CV 7991: Khoảng 40% Nhận biết (NB), 30% Thông hiểu (TH), 20% Vận dụng (VD), 10% Vận dụng cao (VDC).
-4. Mỗi câu trắc nghiệm Đúng/Sai phải có 1 tình huống/ngữ liệu thực tiễn dẫn dắt, kèm 4 mệnh đề a, b, c, d đi từ Nhận biết đến Vận dụng.
-5. Bản đặc tả phải trích xuất chuẩn Yêu cầu cần đạt (YCCĐ) của Chương trình GDPT 2018 ứng với từng bài học và chỉ rõ số thứ tự câu hỏi tương ứng ở từng mức độ.
-6. Trả về DUY NHẤT một đối tượng JSON hợp lệ theo đúng cấu trúc được yêu cầu.`;
+NHIỆM VỤ ĐẶC BIỆT:
+Xây dựng trọn bộ hồ sơ kiểm tra gồm:
+1. Một (01) Ma trận đề kiểm tra.
+2. Một (01) Bản đặc tả đề kiểm tra.
+3. Hai (02) bộ đề thi độc lập dùng chung Ma trận & Bản đặc tả trên:
+   - "de_chinh_thuc" (Đề gốc)
+   - "de_du_phong" (Đề dự phòng - BẮT BUỘC có nội dung câu hỏi, ngữ liệu và số liệu KHÁC HOÀN TOÀN với đề chính thức, nhưng tương đương tuyệt đối về mức độ nhận thức NB/TH/VD/VDC và Yêu cầu cần đạt ở từng câu).
 
-            const userPrompt = `Hãy tạo hồ sơ đề kiểm tra chuẩn CV 7991 với thông tin sau:
+QUY TẮC KHẢO THÍ BẮT BUỘC:
+- Chỉ ra câu hỏi nằm TRONG GIỚI HẠN các chủ đề/bài học được cung cấp theo đúng SGK "Kết nối tri thức với cuộc sống".
+- Tổng điểm mỗi đề = 10.0 điểm:
+  + Phần I (Trắc nghiệm nhiều lựa chọn): ${p1} điểm (Mỗi câu 0.25 điểm -> gồm ${Math.round(p1/0.25)} câu).
+  + Phần II (Trắc nghiệm Đúng/Sai): ${p2} điểm (Mỗi câu 1.0 điểm gồm 4 ý a, b, c, d -> gồm ${Math.round(p2/1.0)} câu).
+  + Phần III (Tự luận): ${p3} điểm.
+- Tỉ lệ mức độ nhận thức toàn bài chuẩn CV 7991: 40% Nhận biết (NB), 30% Thông hiểu (TH), 20% Vận dụng (VD), 10% Vận dụng cao (VDC).
+- Trả về DUY NHẤT một đối tượng JSON hợp lệ theo đúng cấu trúc được yêu cầu.`;
+
+            const userPrompt = `Hãy tạo hồ sơ đề kiểm tra chuẩn CV 7991 (gồm cả Đề chính thức và Đề dự phòng) với thông tin:
 - Trường: ${schoolName} | Năm học: ${schoolYear}
 - Môn: ${subject} - Lớp: ${grade} (Bộ sách: Kết nối tri thức với cuộc sống)
 - Kỳ kiểm tra: ${examType} | Thời gian: ${duration} phút
@@ -503,12 +560,12 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
       "cau_p3": "Câu 1 (VD)"
     }
   ],
-  "de_thi": {
+  "de_chinh_thuc": {
     "phan_1": [
       {
         "cau": 1,
         "muc_do": "NB",
-        "noi_dung": "Nội dung câu hỏi?",
+        "noi_dung": "Nội dung câu hỏi đề chính thức?",
         "phuong_an": ["Phương án A", "Phương án B", "Phương án C", "Phương án D"],
         "dap_an_index": 0
       }
@@ -516,7 +573,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
     "phan_2": [
       {
         "cau": 1,
-        "ngu_lieu": "Đoạn tình huống thực tế...",
+        "ngu_lieu": "Tình huống thực tế đề chính thức...",
         "cac_y": [
           { "ky_hieu": "a", "noi_dung": "Phát biểu a", "dap_an": "Đúng", "muc_do": "NB" },
           { "ky_hieu": "b", "noi_dung": "Phát biểu b", "dap_an": "Sai", "muc_do": "TH" },
@@ -530,31 +587,47 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
         "cau": 1,
         "muc_do": "VD",
         "diem": 1.5,
-        "noi_dung": "Đề bài tự luận...",
-        "huong_dan_cham": "Các ý cần đạt và biểu điểm chi tiết từng ý..."
+        "noi_dung": "Đề bài tự luận chính thức...",
+        "huong_dan_cham": "Các ý cần đạt và biểu điểm chi tiết..."
+      }
+    ]
+  },
+  "de_du_phong": {
+    "phan_1": [
+      {
+        "cau": 1,
+        "muc_do": "NB",
+        "noi_dung": "Nội dung câu hỏi KHÁC cho đề dự phòng?",
+        "phuong_an": ["Phương án A", "Phương án B", "Phương án C", "Phương án D"],
+        "dap_an_index": 1
+      }
+    ],
+    "phan_2": [
+      {
+        "cau": 1,
+        "ngu_lieu": "Tình huống thực tế KHÁC cho đề dự phòng...",
+        "cac_y": [
+          { "ky_hieu": "a", "noi_dung": "Phát biểu a", "dap_an": "Sai", "muc_do": "NB" },
+          { "ky_hieu": "b", "noi_dung": "Phát biểu b", "dap_an": "Đúng", "muc_do": "TH" },
+          { "ky_hieu": "c", "noi_dung": "Phát biểu c", "dap_an": "Đúng", "muc_do": "TH" },
+          { "ky_hieu": "d", "noi_dung": "Phát biểu d", "dap_an": "Sai", "muc_do": "VD" }
+        ]
+      }
+    ],
+    "phan_3": [
+      {
+        "cau": 1,
+        "muc_do": "VD",
+        "diem": 1.5,
+        "noi_dung": "Đề bài tự luận KHÁC cho đề dự phòng...",
+        "huong_dan_cham": "Các ý cần đạt và biểu điểm chi tiết..."
       }
     ]
   }
 }`;
 
             try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${selectedModel}:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        systemInstruction: { parts: [{ text: systemPrompt }] },
-                        contents: [{ parts: [{ text: userPrompt }] }],
-                        generationConfig: {
-                            temperature: 0.35,
-                            responseMimeType: "application/json"
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                if (data.error) throw new Error(data.error.message);
-
-                const rawText = data.candidates[0].content.parts[0].text;
+                const rawText = await callGeminiWithFallback(apiKey, selectedModel, systemPrompt, userPrompt);
                 currentExamData = JSON.parse(rawText);
                 currentExamData.meta = { schoolName, schoolYear, subject, grade, examType, duration, p1, p2, p3 };
 
@@ -577,7 +650,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
         }
 
         function renderAllTabs() {
-            const { meta, ma_tran, ban_dac_ta, de_thi } = currentExamData;
+            const { meta, ma_tran, ban_dac_ta, de_chinh_thuc, de_du_phong } = currentExamData;
 
             let sumP1_NB = 0, sumP1_TH = 0, sumP1_VD = 0, sumP1_VDC = 0;
             let sumP2_NB = 0, sumP2_TH = 0, sumP2_VD = 0, sumP2_VDC = 0;
@@ -613,7 +686,8 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 <div style="text-align:center; font-weight:bold; margin-bottom:12px;">
                     <p style="margin:0;">${meta.schoolName.toUpperCase()}</p>
                     <p style="margin:4px 0; font-size:14pt;">MA TRẬN ĐỀ ${meta.examType}</p>
-                    <p style="margin:0; font-style:italic; font-weight:normal;">Môn: ${meta.subject} - Lớp ${meta.grade} (SGK Kết nối tri thức) | Năm học: ${meta.schoolYear} | Thời gian: ${meta.duration} phút</p>
+                    <p style="margin:0; font-style:italic; font-weight:normal;">(Dùng chung cho Đề chính thức và Đề dự phòng)</p>
+                    <p style="margin:2px 0 0 0; font-style:italic; font-weight:normal;">Môn: ${meta.subject} - Lớp ${meta.grade} (SGK Kết nối tri thức) | Năm học: ${meta.schoolYear} | Thời gian: ${meta.duration} phút</p>
                 </div>
                 <table>
                     <thead>
@@ -673,7 +747,8 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 <div style="text-align:center; font-weight:bold; margin-bottom:12px;">
                     <p style="margin:0;">${meta.schoolName.toUpperCase()}</p>
                     <p style="margin:4px 0; font-size:14pt;">BẢN ĐẶC TẢ ĐỀ ${meta.examType}</p>
-                    <p style="margin:0; font-style:italic; font-weight:normal;">Môn: ${meta.subject} - Lớp ${meta.grade} (Theo CT GDPT 2018 - Kết nối tri thức) | Năm học: ${meta.schoolYear}</p>
+                    <p style="margin:0; font-style:italic; font-weight:normal;">(Dùng chung cho Đề chính thức và Đề dự phòng)</p>
+                    <p style="margin:2px 0 0 0; font-style:italic; font-weight:normal;">Môn: ${meta.subject} - Lớp ${meta.grade} (Theo CT GDPT 2018 - Kết nối tri thức) | Năm học: ${meta.schoolYear}</p>
                 </div>
                 <table>
                     <thead>
@@ -691,7 +766,8 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 </table>
             `;
 
-            document.getElementById('content-exam').innerHTML = buildExamHTML(de_thi, "ĐỀ GỐC");
+            document.getElementById('content-exam').innerHTML = buildExamHTML(de_chinh_thuc, "ĐỀ CHÍNH THỨC (ĐỀ GỐC)");
+            document.getElementById('content-backup').innerHTML = buildExamHTML(de_du_phong, "ĐỀ DỰ PHÒNG");
         }
 
         function buildExamHTML(deThiObj, maDeLabel) {
@@ -746,7 +822,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                         <td style="border:none; text-align:center; width:45%; vertical-align:top;">
                             <b>${meta.schoolName.toUpperCase()}</b><br>
                             <span>TỔ CHUYÊN MÔN</span><br>
-                            <span style="border:1px solid #000; padding:2px 8px; display:inline-block; margin-top:4px; font-weight:bold;">MÃ ĐỀ: ${maDeLabel}</span>
+                            <span style="border:1px solid #000; padding:2px 8px; display:inline-block; margin-top:4px; font-weight:bold;">${maDeLabel}</span>
                         </td>
                         <td style="border:none; text-align:center; width:55%; vertical-align:top;">
                             <b>${meta.examType}</b><br>
@@ -773,7 +849,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 <hr style="border-top: 2px dashed #666; margin: 25px 0;">
 
                 <div style="text-align:center; font-weight:bold; margin-bottom:10px;">
-                    <p style="font-size:13.5pt; margin:0;">HƯỚNG DẪN CHẤM VÀ BIỂU ĐIỂM - MÃ ĐỀ ${maDeLabel}</p>
+                    <p style="font-size:13.5pt; margin:0;">HƯỚNG DẪN CHẤM VÀ BIỂU ĐIỂM - ${maDeLabel}</p>
                 </div>
                 <p style="font-weight:bold; margin:6px 0;">I. Phần trắc nghiệm nhiều lựa chọn (${meta.p1} điểm - Mỗi câu đúng 0.25 điểm):</p>
                 <table>
@@ -808,13 +884,17 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
         function generateShuffledVersions() {
             if (!currentExamData) return;
             const count = parseInt(document.getElementById('numVersions').value);
+            const sourceType = document.getElementById('shuffleSource').value;
+            const sourceExam = sourceType === 'backup' ? currentExamData.de_du_phong : currentExamData.de_chinh_thuc;
+            const startCode = sourceType === 'backup' ? 201 : 101;
+
             shuffledDataList = [];
             let fullHTML = '';
 
             for (let v = 0; v < count; v++) {
-                const maDe = (101 + v).toString();
+                const maDe = `MÃ ĐỀ: ${startCode + v}`;
                 
-                const p1Shuffled = shuffleArray(currentExamData.de_thi.phan_1).map(q => {
+                const p1Shuffled = shuffleArray(sourceExam.phan_1).map(q => {
                     const correctText = q.phuong_an[q.dap_an_index];
                     const cleanOptions = q.phuong_an.map(opt => opt.replace(/^[A-D]\.\s*/, ''));
                     const cleanCorrect = correctText.replace(/^[A-D]\.\s*/, '');
@@ -823,8 +903,8 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                     return { ...q, phuong_an: newOptions, dap_an_index: newIndex };
                 });
 
-                const p2Shuffled = shuffleArray(currentExamData.de_thi.phan_2);
-                const p3Copy = JSON.parse(JSON.stringify(currentExamData.de_thi.phan_3));
+                const p2Shuffled = shuffleArray(sourceExam.phan_2);
+                const p3Copy = JSON.parse(JSON.stringify(sourceExam.phan_3));
 
                 const versionObj = { maDe, deThi: { phan_1: p1Shuffled, phan_2: p2Shuffled, phan_3: p3Copy } };
                 shuffledDataList.push(versionObj);
@@ -871,9 +951,10 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             const combinedHTML = 
                 document.getElementById('content-matrix').innerHTML + pageBreak +
                 document.getElementById('content-spec').innerHTML + pageBreak +
-                document.getElementById('content-exam').innerHTML;
+                document.getElementById('content-exam').innerHTML + pageBreak +
+                document.getElementById('content-backup').innerHTML;
 
-            const fileName = `HoSoDeThi7991_${currentExamData.meta.subject}_Lop${currentExamData.meta.grade}.doc`;
+            const fileName = `HoSoDeChinhThuc_Va_DuPhong_7991_${currentExamData.meta.subject}_Lop${currentExamData.meta.grade}.doc`;
             downloadAsWord(combinedHTML, fileName);
         }
 

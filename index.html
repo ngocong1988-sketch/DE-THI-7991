@@ -38,7 +38,7 @@
             font-weight: bold;
             text-align: center;
         }
-        /* Phân số hiển thị trên web (sẽ tự chuyển thành Equation khi xuất Word) */
+        /* Phân số hiển thị trên web (tự chuyển thành Equation khi xuất Word) */
         table.math-frac {
             display: inline-table !important;
             width: auto !important;
@@ -56,7 +56,7 @@
         table.math-frac tr:first-child td {
             border-bottom: 1px solid #000 !important;
         }
-        /* Dấu căn hiển thị nội dòng trên web (sẽ tự chuyển thành Equation chuẩn khi xuất Word) */
+        /* Dấu căn hiển thị nội dòng trên web (tự chuyển thành Equation chuẩn khi xuất Word) */
         .math-sqrt {
             display: inline;
             white-space: nowrap;
@@ -115,15 +115,19 @@
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 bg-blue-950/60 px-3 py-2 rounded-lg border border-blue-700">
-                <select id="modelSelect" class="bg-blue-900 text-xs text-white border border-blue-600 rounded px-2 py-1 focus:outline-none max-w-[190px]">
+                <select id="modelSelect" class="bg-blue-900 text-xs text-white border border-blue-600 rounded px-2 py-1 focus:outline-none max-w-[180px]">
                     <option value="gemini-3.8-flash" selected>Gemini 3.8 Flash (Mới nhất)</option>
                     <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
                     <option value="gemini-3.5-pro">Gemini 3.5 Pro (Chuyên sâu)</option>
                 </select>
                 <i class="fa-solid fa-key text-yellow-400 text-sm"></i>
                 <input type="password" id="apiKey" placeholder="Nhập Gemini API Key..." 
-                    class="bg-transparent text-sm text-white placeholder-blue-300 focus:outline-none w-44">
-                <button onclick="saveApiKey()" class="text-xs bg-blue-600 hover:bg-blue-500 px-2.5 py-1 rounded font-medium transition">Lưu</button>
+                    class="bg-transparent text-sm text-white placeholder-blue-300 focus:outline-none w-40">
+                <button type="button" onclick="saveApiKey()" class="text-xs bg-blue-600 hover:bg-blue-500 px-2.5 py-1 rounded font-medium transition">Lưu</button>
+                <button type="button" onclick="openApiKeyModal(false)" class="text-xs bg-amber-400 hover:bg-amber-300 text-blue-950 px-2.5 py-1 rounded font-bold transition flex items-center gap-1 shadow-sm" title="Xem hướng dẫn lấy Gemini API Key miễn phí từ Google">
+                    <i class="fa-solid fa-circle-question"></i>
+                    <span>Lấy Key miễn phí</span>
+                </button>
             </div>
         </div>
     </header>
@@ -325,9 +329,14 @@
                     <i class="fa-solid fa-layer-group text-6xl text-gray-300 mb-4"></i>
                     <h3 class="text-lg font-semibold text-gray-700">Sẵn sàng khởi tạo bộ đôi Đề gốc & Đề dự phòng</h3>
                     <p class="text-sm max-w-md mt-1">Hệ thống tự động thiết lập <b>Ma trận + Bản đặc tả</b> dùng chung, biên soạn <b>01 Đề chính thức</b> + <b>01 Đề dự phòng</b>, tự động chuyển phân số & dấu căn sang công thức Equation chuẩn khi tải Word.</p>
-                    <button onclick="switchTab('bank')" class="mt-4 text-xs bg-white border border-gray-300 hover:bg-gray-50 text-blue-700 font-semibold px-4 py-2 rounded-lg shadow-sm transition">
-                        <i class="fa-solid fa-folder-open mr-1"></i> Mở Kho đề đã lưu / Nạp file .json
-                    </button>
+                    <div class="mt-4 flex flex-wrap justify-center gap-2.5">
+                        <button onclick="openApiKeyModal(false)" class="text-xs bg-amber-50 border border-amber-300 hover:bg-amber-100 text-amber-900 font-semibold px-4 py-2 rounded-lg shadow-sm transition">
+                            <i class="fa-solid fa-key text-amber-600 mr-1"></i> Hướng dẫn lấy Gemini API Key miễn phí
+                        </button>
+                        <button onclick="switchTab('bank')" class="text-xs bg-white border border-gray-300 hover:bg-gray-50 text-blue-700 font-semibold px-4 py-2 rounded-lg shadow-sm transition">
+                            <i class="fa-solid fa-folder-open mr-1"></i> Mở Kho đề đã lưu / Nạp file .json
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Trạng thái đang tải -->
@@ -394,6 +403,97 @@
             </div>
         </div>
     </main>
+
+    <!-- Cửa sổ (Modal) Hướng dẫn lấy Gemini API Key miễn phí -->
+    <div id="apiKeyGuideModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-xs" onclick="if(event.target === this) closeApiKeyModal()">
+        <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-gray-200 overflow-hidden animate-fadeIn">
+            <!-- Header Modal -->
+            <div class="bg-gradient-to-r from-blue-800 to-indigo-900 text-white px-5 py-4 flex justify-between items-center">
+                <div class="flex items-center gap-2.5">
+                    <div class="bg-amber-400 text-blue-950 p-1.5 rounded-lg">
+                        <i class="fa-solid fa-key"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base">HƯỚNG DẪN LẤY GEMINI API KEY MIỄN PHÍ</h3>
+                        <p class="text-[11px] text-blue-200">Thao tác 1 lần duy nhất trong 30 giây • Hoàn toàn miễn phí từ Google</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeApiKeyModal()" class="text-white/80 hover:text-white text-xl leading-none px-2">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Body Modal -->
+            <div class="p-5 space-y-4 max-h-[80vh] overflow-y-auto text-sm">
+                <!-- Cảnh báo nếu bấm tạo đề khi chưa nhập key -->
+                <div id="modalMissingKeyAlert" class="hidden bg-red-50 border border-red-200 text-red-800 px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-2 font-medium">
+                    <i class="fa-solid fa-triangle-exclamation text-red-600 text-base"></i>
+                    <span>Bạn chưa nhập <b>Gemini API Key</b>. Hãy làm theo 4 bước đơn giản dưới đây để lấy mã miễn phí và dán vào ô bên dưới nhé!</span>
+                </div>
+
+                <!-- 4 Bước thực hiện -->
+                <div class="space-y-3">
+                    <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <span class="bg-blue-700 text-white font-bold text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5">1</span>
+                        <div class="flex-1">
+                            <p class="font-bold text-gray-800">Mở trang Google AI Studio</p>
+                            <p class="text-xs text-gray-600 mt-0.5">Bấm vào nút bên dưới để mở trang cấp mã API chính thức của Google (mở ở tab mới):</p>
+                            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" 
+                               class="inline-flex items-center gap-1.5 mt-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow-xs transition">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <span>Mở Google AI Studio (aistudio.google.com)</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <span class="bg-blue-700 text-white font-bold text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5">2</span>
+                        <div>
+                            <p class="font-bold text-gray-800">Đăng nhập bằng tài khoản Gmail cá nhân</p>
+                            <p class="text-xs text-gray-600 mt-0.5">Sử dụng tài khoản <b>@gmail.com</b> thông thường (tránh dùng email cơ quan/trường học vì có thể bị quản trị viên giới hạn quyền). Nếu hiện bảng điều khoản, tích chọn đồng ý và bấm <b>Continue</b>.</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <span class="bg-blue-700 text-white font-bold text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5">3</span>
+                        <div>
+                            <p class="font-bold text-gray-800">Nhấn nút "Create API key" (Tạo khóa API)</p>
+                            <p class="text-xs text-gray-600 mt-0.5">Ở góc trên bên phải màn hình Google AI Studio, bấm nút xanh <b>Create API key</b> -> Chọn <b>Create API key in new project</b> (Tạo khóa API trong dự án mới).</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <span class="bg-blue-700 text-white font-bold text-xs w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5">4</span>
+                        <div>
+                            <p class="font-bold text-gray-800">Sao chép (Copy) mã Key và dán vào bên dưới</p>
+                            <p class="text-xs text-gray-600 mt-0.5">Bấm nút <b>Copy</b> đoạn mã bắt đầu bằng chữ <code class="bg-gray-200 px-1.5 py-0.5 rounded text-blue-900 font-mono">AIzaSy...</code>, sau đó dán trực tiếp vào ô dưới đây:</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ô nhập & Lưu nhanh ngay trong Modal -->
+                <div class="bg-blue-50 p-3.5 rounded-xl border border-blue-200">
+                    <label class="block text-xs font-bold text-blue-900 mb-1.5">Dán mã API Key của bạn vào đây để lưu ngay:</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="modalApiKeyInput" placeholder="Dán mã AIzaSy... vào đây" 
+                            class="flex-1 bg-white border border-blue-300 rounded-lg px-3 py-2 text-xs font-mono focus:ring-2 focus:ring-blue-500 outline-none">
+                        <button type="button" onclick="saveApiKeyFromModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-lg shadow transition shrink-0">
+                            <i class="fa-solid fa-check mr-1"></i> Lưu & Sử dụng
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Lưu ý bảo mật & Gói miễn phí -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-xs text-amber-900 space-y-1">
+                    <p class="font-bold"><i class="fa-solid fa-shield-halved text-amber-600 mr-1"></i> Lưu ý dành cho giáo viên:</p>
+                    <ul class="list-disc pl-5 space-y-0.5 text-[11.5px]">
+                        <li><b>Miễn phí 100%:</b> Google cấp hạn mức miễn phí mỗi ngày đủ để soạn hàng chục bộ Ma trận + Đề thi mà không cần thẻ thanh toán.</li>
+                        <li><b>Bảo mật tuyệt đối:</b> Mã Key chỉ lưu cục bộ trên trình duyệt máy tính của thầy/cô, không gửi lên bất kỳ máy chủ nào khác.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         let currentExamData = null;
@@ -519,6 +619,38 @@
             setupEditorPasteAndFocus();
             renderExamBankList();
         };
+
+        // Quản lý cửa sổ Hướng dẫn lấy API Key
+        function openApiKeyModal(fromMissingKey = false) {
+            const modal = document.getElementById('apiKeyGuideModal');
+            const alertBox = document.getElementById('modalMissingKeyAlert');
+            const modalInput = document.getElementById('modalApiKeyInput');
+            modalInput.value = document.getElementById('apiKey').value.trim();
+
+            if (fromMissingKey) {
+                alertBox.classList.remove('hidden');
+            } else {
+                alertBox.classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+            if (fromMissingKey) setTimeout(() => modalInput.focus(), 100);
+        }
+
+        function closeApiKeyModal() {
+            document.getElementById('apiKeyGuideModal').classList.add('hidden');
+        }
+
+        function saveApiKeyFromModal() {
+            const val = document.getElementById('modalApiKeyInput').value.trim();
+            if (!val) {
+                alert("Vui lòng dán mã API Key vào ô trống trước khi lưu!");
+                document.getElementById('modalApiKeyInput').focus();
+                return;
+            }
+            document.getElementById('apiKey').value = val;
+            saveApiKey();
+            closeApiKeyModal();
+        }
 
         function setupEditorPasteAndFocus() {
             const editors = ['content-matrix', 'content-spec', 'content-exam', 'content-backup', 'shuffledOutput'];
@@ -677,7 +809,10 @@
 
         function saveApiKey() {
             const key = document.getElementById('apiKey').value.trim();
-            if (!key) return alert("Vui lòng nhập API Key!");
+            if (!key) {
+                openApiKeyModal(true);
+                return;
+            }
             localStorage.setItem('gemini_api_key_7991', key);
             fetchAvailableModels(key);
             alert("Đã lưu API Key và cập nhật danh sách Model mới nhất!");
@@ -787,8 +922,7 @@
         async function generateExam() {
             const apiKey = document.getElementById('apiKey').value.trim();
             if (!apiKey) {
-                alert("Vui lòng nhập Gemini API Key ở góc trên bên phải trước khi tạo đề!");
-                document.getElementById('apiKey').focus();
+                openApiKeyModal(true);
                 return;
             }
 
@@ -1402,7 +1536,7 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             document.getElementById('shuffledOutput').innerHTML = fullHTML;
         }
 
-        // Chuyển đổi dấu căn & phân số sang công thức Word Equation (OMML) gốc để không bao giờ bị ô vuông hay nhảy dòng
+        // Chuyển đổi dấu căn & phân số sang công thức Word Equation (OMML) gốc
         function prepareHTMLForWord(rawHTML) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = rawHTML;
@@ -1443,7 +1577,6 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 return result;
             }
 
-            // 1. Chuyển phân số table.math-frac sang OMML <m:f>
             const fracs = Array.from(tempDiv.querySelectorAll('table.math-frac')).reverse();
             fracs.forEach(tbl => {
                 const rows = tbl.querySelectorAll('tr');
@@ -1462,7 +1595,6 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
                 }
             });
 
-            // 2. Chuyển dấu căn .math-sqrt từ trong ra ngoài sang OMML <m:rad> (ẩn bậc căn -> không bao giờ có ô vuông)
             const sqrts = Array.from(tempDiv.querySelectorAll('.math-sqrt')).reverse();
             sqrts.forEach(sq => {
                 const body = sq.querySelector('.math-sqrt-body');

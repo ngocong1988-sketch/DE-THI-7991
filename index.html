@@ -12,7 +12,7 @@
         .doc-preview {
             font-family: "Times New Roman", Times, serif;
             font-size: 13pt;
-            line-height: 1.4;
+            line-height: 1.45;
             color: #000;
             background: #fff;
             padding: 20mm 15mm 20mm 25mm;
@@ -38,7 +38,7 @@
             font-weight: bold;
             text-align: center;
         }
-        /* Phân số chuẩn Word không viền ngoài */
+        /* Phân số hiển thị trên web (sẽ tự chuyển thành Equation khi xuất Word) */
         table.math-frac {
             display: inline-table !important;
             width: auto !important;
@@ -56,16 +56,16 @@
         table.math-frac tr:first-child td {
             border-bottom: 1px solid #000 !important;
         }
-        /* Dấu căn có gạch ngang trên đầu chuẩn Word */
+        /* Dấu căn hiển thị nội dòng trên web (sẽ tự chuyển thành Equation chuẩn khi xuất Word) */
         .math-sqrt {
-            display: inline-block;
+            display: inline;
             white-space: nowrap;
         }
         .math-sqrt-body {
             border-top: 1.2px solid #000;
             padding: 0 2px;
             display: inline-block;
-            line-height: 1.1;
+            line-height: 1.05;
         }
         .tab-btn.active {
             border-bottom: 3px solid #2563eb;
@@ -111,7 +111,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold tracking-wide">TRỢ LÝ KHẢO THÍ CHUẨN CÔNG VĂN 7991</h1>
-                    <p class="text-xs text-blue-200">GDPT 2018 • Kết nối tri thức • Toán học chuẩn Word • Kho đề chia sẻ</p>
+                    <p class="text-xs text-blue-200">GDPT 2018 • Kết nối tri thức • Toán học Equation chuẩn Word • Kho đề chia sẻ</p>
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 bg-blue-950/60 px-3 py-2 rounded-lg border border-blue-700">
@@ -295,7 +295,7 @@
             <div id="mathToolbar" class="hidden bg-slate-100 border-x border-b border-gray-300 px-3 py-2 flex flex-wrap items-center gap-1.5 shadow-inner">
                 <span class="text-[11px] font-bold text-slate-600 mr-1"><i class="fa-solid fa-square-root-variable text-blue-700"></i> Chèn nhanh:</span>
                 <button type="button" onmousedown="event.preventDefault(); insertFraction()" class="math-btn bg-blue-50 border-blue-300 text-blue-800" title="Chèn phân số tử/mẫu">Phân số a/b</button>
-                <button type="button" onmousedown="event.preventDefault(); insertSqrt()" class="math-btn bg-blue-50 border-blue-300 text-blue-800" title="Chèn căn bậc hai có gạch ngang trên đầu">√x</button>
+                <button type="button" onmousedown="event.preventDefault(); insertSqrt()" class="math-btn bg-blue-50 border-blue-300 text-blue-800" title="Chèn căn bậc hai có gạch ngang trên đầu chuẩn Word">√x</button>
                 <button type="button" onmousedown="event.preventDefault(); insertSuperscript()" class="math-btn" title="Chèn số mũ (xⁿ)">x<sup>n</sup></button>
                 <button type="button" onmousedown="event.preventDefault(); insertSubscript()" class="math-btn" title="Chèn chỉ số dưới (xₙ)">x<sub>n</sub></button>
                 <button type="button" onmousedown="event.preventDefault(); insertHTMLAtCursor('±')" class="math-btn">±</button>
@@ -324,7 +324,7 @@
                 <div id="emptyState" class="flex flex-col items-center justify-center h-[550px] text-gray-500 text-center px-6">
                     <i class="fa-solid fa-layer-group text-6xl text-gray-300 mb-4"></i>
                     <h3 class="text-lg font-semibold text-gray-700">Sẵn sàng khởi tạo bộ đôi Đề gốc & Đề dự phòng</h3>
-                    <p class="text-sm max-w-md mt-1">Hệ thống tự động thiết lập <b>Ma trận + Bản đặc tả</b> dùng chung, biên soạn <b>01 Đề chính thức</b> + <b>01 Đề dự phòng</b>, hỗ trợ chèn công thức/ảnh chuẩn Word và lưu trữ kho đề chia sẻ.</p>
+                    <p class="text-sm max-w-md mt-1">Hệ thống tự động thiết lập <b>Ma trận + Bản đặc tả</b> dùng chung, biên soạn <b>01 Đề chính thức</b> + <b>01 Đề dự phòng</b>, tự động chuyển phân số & dấu căn sang công thức Equation chuẩn khi tải Word.</p>
                     <button onclick="switchTab('bank')" class="mt-4 text-xs bg-white border border-gray-300 hover:bg-gray-50 text-blue-700 font-semibold px-4 py-2 rounded-lg shadow-sm transition">
                         <i class="fa-solid fa-folder-open mr-1"></i> Mở Kho đề đã lưu / Nạp file .json
                     </button>
@@ -340,7 +340,7 @@
                 <!-- Khu vực xem trước & Chỉnh sửa trực tiếp -->
                 <div id="previewContainer" class="hidden">
                     <div class="bg-blue-50 border border-blue-200 text-blue-800 text-xs px-3 py-1.5 rounded-lg mb-3 flex flex-wrap items-center justify-between gap-2">
-                        <span><i class="fa-solid fa-circle-info mr-1"></i> Đặt con trỏ vào bài làm và dùng thanh công cụ phía trên để chèn phân số, dấu căn (<b>√x</b>) hoặc dán ảnh (<b>Ctrl+V</b>). Xuất Word không lỗi font.</span>
+                        <span><i class="fa-solid fa-circle-info mr-1"></i> Đặt con trỏ vào bài làm và dùng thanh công cụ phía trên để chèn phân số, dấu căn (<b>√x</b>) hoặc dán ảnh (<b>Ctrl+V</b>). Xuất Word chuẩn Equation, không ô vuông.</span>
                     </div>
                     <div id="content-matrix" class="doc-preview" contenteditable="true"></div>
                     <div id="content-spec" class="doc-preview hidden" contenteditable="true"></div>
@@ -622,9 +622,13 @@
                 .replace(/\$\$/g, '')
                 .replace(/\$/g, '')
                 .replace(/\\frac\{([^{}]+)\}\{([^{}]+)\}/g, '<table class="math-frac"><tr><td>$1</td></tr><tr><td>$2</td></tr></table>')
-                .replace(/\\sqrt\{([^{}]+)\}/g, '<span class="math-sqrt">√<span class="math-sqrt-body">$1</span></span>')
-                .replace(/√\(([^()]+)\)/g, '<span class="math-sqrt">√<span class="math-sqrt-body">($1)</span></span>')
+                .replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>')
+                .replace(/\^([0-9a-zA-Z+-])/g, '<sup>$1</sup>')
+                .replace(/\_\{([^{}]+)\}/g, '<sub>$1</sub>')
+                .replace(/\_([0-9a-zA-Z])/g, '<sub>$1</sub>')
+                .replace(/\\sqrt\{((?:[^{}]|\{[^{}]*\})+)\}/g, '<span class="math-sqrt">√<span class="math-sqrt-body">$1</span></span>')
                 .replace(/√([0-9a-zA-Z]+)/g, '<span class="math-sqrt">√<span class="math-sqrt-body">$1</span></span>')
+                .replace(/√\(((?:[^()]+|\([^()]*\))*)\)/g, '<span class="math-sqrt">√<span class="math-sqrt-body">$1</span></span>')
                 .replace(/\\leq/g, '≤')
                 .replace(/\\geq/g, '≥')
                 .replace(/\\neq/g, '≠')
@@ -644,10 +648,6 @@
                 .replace(/\\pi/g, 'π')
                 .replace(/\\alpha/g, 'α')
                 .replace(/\\beta/g, 'β')
-                .replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>')
-                .replace(/\^([0-9a-zA-Z+-])/g, '<sup>$1</sup>')
-                .replace(/\_\{([^{}]+)\}/g, '<sub>$1</sub>')
-                .replace(/\_([0-9a-zA-Z])/g, '<sub>$1</sub>')
                 .replace(/([.:;?!])\s*([a-d]\))/gi, '$1<br><b>$2</b>')
                 .replace(/^([a-d]\))/i, '<b>$1</b>')
                 .replace(/([.:;?!])\s*([-+•]\s+)/g, '$1<br>&nbsp;&nbsp;$2')
@@ -1402,27 +1402,110 @@ Trả về JSON theo đúng cấu trúc sau (không bọc trong markdown \`\`\`j
             document.getElementById('shuffledOutput').innerHTML = fullHTML;
         }
 
+        // Chuyển đổi dấu căn & phân số sang công thức Word Equation (OMML) gốc để không bao giờ bị ô vuông hay nhảy dòng
+        function prepareHTMLForWord(rawHTML) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = rawHTML;
+            const ommlMap = {};
+            let counter = 0;
+
+            const supMap = {'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','-':'⁻','=':'⁼','(':'⁽',')':'⁾','n':'ⁿ','i':'ⁱ','x':'ˣ','y':'ʸ','a':'ᵃ','b':'ᵇ','c':'ᶜ','d':'ᵈ','k':'ᵏ','m':'ᵐ'};
+            const subMap = {'0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉','+':'₊','-':'₋','=':'₌','(':'₍',')':'₎','a':'ₐ','e':'ₑ','o':'ₒ','x':'ₓ','n':'ₙ','m':'ₘ','k':'ₖ'};
+
+            function toUnicodeScript(str, map) {
+                return str.split('').map(ch => map[ch] || ch).join('');
+            }
+
+            function nodeToOMML(node) {
+                if (node.nodeType === 3) {
+                    const txt = node.nodeValue;
+                    if (!txt) return '';
+                    const escaped = txt.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return `<m:r><m:t xml:space="preserve">${escaped}</m:t></m:r>`;
+                }
+                if (node.nodeType !== 1) return '';
+                const tag = node.tagName.toLowerCase();
+                if (tag === 'omml-node') {
+                    return ommlMap[node.getAttribute('data-id')] || '';
+                }
+                if (tag === 'sup') {
+                    const converted = toUnicodeScript(node.textContent, supMap);
+                    const escaped = converted.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return `<m:r><m:t xml:space="preserve">${escaped}</m:t></m:r>`;
+                }
+                if (tag === 'sub') {
+                    const converted = toUnicodeScript(node.textContent, subMap);
+                    const escaped = converted.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    return `<m:r><m:t xml:space="preserve">${escaped}</m:t></m:r>`;
+                }
+                let result = '';
+                node.childNodes.forEach(c => result += nodeToOMML(c));
+                return result;
+            }
+
+            // 1. Chuyển phân số table.math-frac sang OMML <m:f>
+            const fracs = Array.from(tempDiv.querySelectorAll('table.math-frac')).reverse();
+            fracs.forEach(tbl => {
+                const rows = tbl.querySelectorAll('tr');
+                if (rows.length >= 2) {
+                    let numOMML = '';
+                    rows[0].querySelector('td').childNodes.forEach(c => numOMML += nodeToOMML(c));
+                    let denOMML = '';
+                    rows[1].querySelector('td').childNodes.forEach(c => denOMML += nodeToOMML(c));
+                    const id = ++counter;
+                    const fracXML = `<m:f><m:num>${numOMML || '<m:r><m:t> </m:t></m:r>'}</m:num><m:den>${denOMML || '<m:r><m:t> </m:t></m:r>'}</m:den></m:f>`;
+                    const isNested = tbl.parentElement && (tbl.parentElement.closest('.math-sqrt') || tbl.parentElement.closest('table.math-frac'));
+                    ommlMap[id] = isNested ? fracXML : `<m:oMath>${fracXML}</m:oMath>`;
+                    const placeholder = document.createElement('omml-node');
+                    placeholder.setAttribute('data-id', id);
+                    tbl.replaceWith(placeholder);
+                }
+            });
+
+            // 2. Chuyển dấu căn .math-sqrt từ trong ra ngoài sang OMML <m:rad> (ẩn bậc căn -> không bao giờ có ô vuông)
+            const sqrts = Array.from(tempDiv.querySelectorAll('.math-sqrt')).reverse();
+            sqrts.forEach(sq => {
+                const body = sq.querySelector('.math-sqrt-body');
+                if (body) {
+                    let bodyOMML = '';
+                    body.childNodes.forEach(c => bodyOMML += nodeToOMML(c));
+                    const id = ++counter;
+                    const radXML = `<m:rad><m:radPr><m:degHide m:val="1"/></m:radPr><m:deg/><m:e>${bodyOMML || '<m:r><m:t>x</m:t></m:r>'}</m:e></m:rad>`;
+                    const isNested = sq.parentElement && (sq.parentElement.closest('.math-sqrt') || sq.parentElement.closest('table.math-frac'));
+                    ommlMap[id] = isNested ? radXML : `<m:oMath>${radXML}</m:oMath>`;
+                    const placeholder = document.createElement('omml-node');
+                    placeholder.setAttribute('data-id', id);
+                    sq.replaceWith(placeholder);
+                }
+            });
+
+            return tempDiv.innerHTML.replace(/<omml-node data-id="(\d+)"><\/omml-node>/g, (_, id) => ommlMap[id] || '');
+        }
+
         function downloadAsWord(htmlBody, filename) {
+            const processedBody = prepareHTMLForWord(htmlBody);
             const header = `
                 <html xmlns:o='urn:schemas-microsoft-com:office:office' 
                       xmlns:w='urn:schemas-microsoft-com:office:word' 
+                      xmlns:m='http://schemas.microsoft.com/office/2004/12/omml'
                       xmlns='http://www.w3.org/TR/REC-html40'>
                 <head><meta charset='utf-8'><title>Export Word</title>
+                <!--[if gte mso 9]><xml>
+                 <w:WordDocument>
+                  <w:View>Print</w:View>
+                  <w:Zoom>100</w:Zoom>
+                 </w:WordDocument>
+                </xml><![endif]-->
                 <style>
                     @page { size: A4; margin: 2cm 1.5cm 2cm 2.5cm; }
                     body { font-family: "Times New Roman", serif; font-size: 13pt; line-height: 1.35; }
                     table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 11.5pt; }
                     th, td { border: 1px solid #000; padding: 4px 6px; vertical-align: middle; }
                     th { background-color: #f2f2f2; font-weight: bold; text-align: center; }
-                    table.math-frac { display: inline-table; width: auto; border-collapse: collapse; vertical-align: middle; margin: 0 3px; }
-                    table.math-frac td { border: none; padding: 0 4px; text-align: center; line-height: 1.15; }
-                    table.math-frac tr:first-child td { border-bottom: 1px solid #000; }
-                    .math-sqrt { white-space: nowrap; }
-                    .math-sqrt-body { border-top: 1pt solid #000; padding: 0 2px; }
                 </style>
                 </head><body>`;
             const footer = "</body></html>";
-            const sourceHTML = header + htmlBody + footer;
+            const sourceHTML = header + processedBody + footer;
 
             const blob = new Blob(['\ufeff', sourceHTML], { type: 'application/msword' });
             const url = URL.createObjectURL(blob);
